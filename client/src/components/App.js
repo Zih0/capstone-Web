@@ -7,7 +7,8 @@ import LoginPage from './views/LoginPage/LoginPage';
 import RegisterPage from './views/RegisterPage/RegisterPage';
 import NavBar from './views/NavBar/NavBar';
 import Footer from './views/Footer/Footer';
-import WebCam from './views/RegisterPage/WebCam';
+import RegisterFace from './views/RegisterPage/RegisterFace';
+import RegisterCourse from './views/RegisterPage/RegisterCourse';
 //null   Anyone Can go inside
 //true   only logged in user can go inside
 //false  logged in user can't go inside
@@ -21,7 +22,8 @@ function App() {
           <Route exact path="/" component={Auth(LandingPage, null)} />
           <Route exact path="/login" component={Auth(LoginPage, false)} />
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
-          <Route exact path="/video" component={Auth(WebCam, true)} />
+          <Route exact path="/video" component={Auth(RegisterFace, true)} />
+          <Route exact path="/course" component={Auth(RegisterCourse, true)} />
         </Switch>
       </div>
       <Footer />

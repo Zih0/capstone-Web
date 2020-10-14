@@ -24,12 +24,14 @@ function LoginPage(props) {
   return (
     <Formik
       initialValues={{
-        email: initialEmail,
+        email: '',
         password: '',
       }}
       validationSchema={Yup.object().shape({
         email: Yup.string().email('Email 형태로 입력해주세요').required('Email을 입력해주세요'),
-        password: Yup.string().min(6, '비밀번호는 최소 6자 이상 입력해주세요').required('비밀번호를 입력해주세요'),
+        password: Yup.string()
+          .min(6, '비밀번호는 최소 6자 이상 입력해주세요')
+          .required('비밀번호를 입력해주세요'),
       })}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
@@ -49,11 +51,11 @@ function LoginPage(props) {
                 }
                 props.history.push('/');
               } else {
-                setFormErrorMessage('Check out your Account or Password again');
+                setFormErrorMessage('이메일 또는 비밀번호를 확인해주세요.');
               }
             })
             .catch((err) => {
-              setFormErrorMessage('Check out your Account or Password again');
+              setFormErrorMessage('이메일 또는 비밀번호를 확인해주세요.');
               setTimeout(() => {
                 setFormErrorMessage('');
               }, 3000);
@@ -63,40 +65,88 @@ function LoginPage(props) {
       }}
     >
       {(props) => {
-        const { values, touched, errors, dirty, isSubmitting, handleChange, handleBlur, handleSubmit, handleReset } = props;
+        const {
+          values,
+          touched,
+          errors,
+          dirty,
+          isSubmitting,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          handleReset,
+        } = props;
         return (
           <div className="app">
-            <Title level={2}>Log In</Title>
+            <Title level={2}>로그인</Title>
             <form onSubmit={handleSubmit} style={{ width: '350px' }}>
               <Form.Item required>
-                <Input id="email" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter your email" type="email" value={values.email} onChange={handleChange} onBlur={handleBlur} className={errors.email && touched.email ? 'text-input error' : 'text-input'} />
-                {errors.email && touched.email && <div className="input-feedback">{errors.email}</div>}
+                <Input
+                  id="email"
+                  prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="Email"
+                  type="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={errors.email && touched.email ? 'text-input error' : 'text-input'}
+                />
+                {errors.email && touched.email && (
+                  <div className="input-feedback">{errors.email}</div>
+                )}
               </Form.Item>
 
               <Form.Item required>
-                <Input id="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Enter your password" type="password" value={values.password} onChange={handleChange} onBlur={handleBlur} className={errors.password && touched.password ? 'text-input error' : 'text-input'} />
-                {errors.password && touched.password && <div className="input-feedback">{errors.password}</div>}
+                <Input
+                  id="password"
+                  prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  placeholder="비밀번호"
+                  type="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={
+                    errors.password && touched.password ? 'text-input error' : 'text-input'
+                  }
+                />
+                {errors.password && touched.password && (
+                  <div className="input-feedback">{errors.password}</div>
+                )}
               </Form.Item>
 
               {formErrorMessage && (
                 <label>
-                  <p style={{ color: '#ff0000bf', fontSize: '0.7rem', border: '1px solid', padding: '1rem', borderRadius: '10px' }}>{formErrorMessage}</p>
+                  <p
+                    style={{
+                      color: '#ff0000bf',
+                      fontSize: '0.7rem',
+                      border: '1px solid',
+                      padding: '1rem',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    {formErrorMessage}
+                  </p>
                 </label>
               )}
 
               <Form.Item>
                 <Checkbox id="rememberMe" onChange={handleRememberMe} checked={rememberMe}>
-                  Remember me
+                  자동 로그인
                 </Checkbox>
-                <a className="login-form-forgot" href="/reset_user" style={{ float: 'right' }}>
-                  forgot password
-                </a>
                 <div>
-                  <Button type="primary" htmlType="submit" className="login-form-button" style={{ minWidth: '100%' }} disabled={isSubmitting} onSubmit={handleSubmit}>
-                    Log in
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="login-form-button"
+                    style={{ minWidth: '100%' }}
+                    disabled={isSubmitting}
+                    onSubmit={handleSubmit}
+                  >
+                    로그인
                   </Button>
                 </div>
-                Or <a href="/register">register now!</a>
+                <a href="/register">회원이 아니신가요?</a>
               </Form.Item>
             </form>
           </div>

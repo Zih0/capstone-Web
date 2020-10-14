@@ -27,7 +27,14 @@ const userSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  video: String,
+  video: {
+    type: String,
+    default: ''
+  },
+  course : {
+    type: Array,
+    default: [],
+  },
   token: {
     type: String,
   },
