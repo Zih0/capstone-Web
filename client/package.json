@@ -11,7 +11,10 @@
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.8.6",
+<<<<<<< HEAD
     "react-highlight-words": "^0.16.0",
+=======
+>>>>>>> master
     "react-icons": "^3.7.0",
     "react-redux": "^7.1.0-rc.1",
     "react-router-dom": "^5.0.1",
@@ -23,7 +26,11 @@
     "yup": "^0.27.0"
   },
   "scripts": {
+<<<<<<< HEAD
     "start": "HTTPS=true react-scripts start",
+=======
+    "start": "react-scripts start",
+>>>>>>> master
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

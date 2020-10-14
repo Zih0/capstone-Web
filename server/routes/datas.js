@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
+<<<<<<< HEAD
 const { User } = require('../models/User');
 const { Course } = require('../models/Course');
+=======
+// const { Data } = require('../models/Data');
+>>>>>>> master
 
 const { auth } = require('../middleware/auth');
 const multer = require('multer');
@@ -23,6 +27,7 @@ const upload = multer({ storage: storage }).single('file');
 router.post('/uploadfile', (req, res) => {
   upload(req, res, (err) => {
     console.log(req.body.studentid);
+<<<<<<< HEAD
     console.log(res.req.file.path)
     
     User.findOneAndUpdate(
@@ -58,4 +63,13 @@ router.post('/uploadfile', (req, res) => {
 
 
 
+=======
+    if (err) {
+      return res.json({ success: false, err });
+    }
+    return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename });
+  });
+});
+
+>>>>>>> master
 module.exports = router;

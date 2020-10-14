@@ -63,7 +63,10 @@ router.get('/logout', auth, (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> master
 module.exports = router;
