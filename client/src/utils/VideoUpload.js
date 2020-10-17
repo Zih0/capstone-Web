@@ -27,7 +27,7 @@ const VideoUpload = (props) => {
     const timer = setInterval(() => {
       percentage = percentage + 1;
       setPercent(percentage);
-      if (percentage >= 100) {
+      if (percentage >= 20) {
         setCapturing(false);
         clearInterval(timer);
         mediaRecorderRef.current.stop();

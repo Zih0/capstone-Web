@@ -1,27 +1,27 @@
 import React , {useState ,useEffect} from 'react'
-import { Table, Button , Input ,Icon } from 'antd';
+import { Table, Button , Input } from 'antd';
 import axios from 'axios';
-import Highlighter from 'react-highlight-words';
-
+import { useSelector } from 'react-redux';
+import {Link} from 'react-router-dom'
+import { SearchOutlined } from '@ant-design/icons';
 
 
 const { Search } = Input;
 
-
 const RegisterCourse = () => {
+    const user = useSelector((state) => state.user);
     const [courses, setCourses] = useState([])
     const [loading, setLoading] = useState(false);
     const [searchText, setSearchText] = useState('')
     const [searchedColumn, setSearchedColumn] = useState('')
-    const [selectedRowKeys, setSelectedRowKeys] = useState([])
-    const [selectionType, setSelectionType] = useState('checkbox');
+    const [buttondisabled, setButtondisabled] = useState(false)
+    const [checkKeys, setCheckKeys] = useState([])
 
     const getCourses = () => {
       setLoading(true)
       axios.get("/api/datas/course").then((response) => {
         if (response.data.success) {
-          setCourses([...courses, ...response.data.courseInfo]);
-          console.log(courses)
+          setCourses([...response.data.courseInfo]);
           console.log(response.data.courseInfo)
           setLoading(false)
         } else {
@@ -29,24 +29,28 @@ const RegisterCourse = () => {
         }
       });
     };
+    
+      const submitHandler = () =>{
+
+      let body ={courses: checkKeys,
+      userId: user.userData.studentId
+      }
+      axios.post('/api/datas/update/idincourse', body).then((response) => {
+        if (response.data.success) {
+          console.log(response.data.success)
+        } else {
+          alert('ERROR!!');
+        }
+      });
+    }
 
     useEffect(() => {
-      console.log("courses")
       getCourses();
       }, []);
 
       
       // rowSelection object indicates the need for row selection
-    const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        },
-        getCheckboxProps: record => ({
-          disabled: record.name === 'Disabled User', // Column configuration not to be checked
-          name: record.name,
-        }),
-      };
-
+    
       const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
           <div style={{ padding: 8 }}>
@@ -60,7 +64,7 @@ const RegisterCourse = () => {
               <Button
                 type="primary"
                 onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                icon={<Icon type='search' />}
+                icon={<SearchOutlined />}
                 size="small"
                 style={{ width: 90 }}
               >
@@ -71,27 +75,12 @@ const RegisterCourse = () => {
               </Button>
           </div>
         ),
-        filterIcon: filtered => <Icon type='search' style={{ color: filtered ? '#1890ff' : undefined }} />,
+        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
         onFilter: (value, record) =>
           record[dataIndex]
             ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
             : '',
-        // onFilterDropdownVisibleChange: visible => {
-        //   if (visible) {
-        //     setTimeout(() => searchInput.select(), 100);
-        //   }
-        // },
-        render: text =>
-          searchedColumn === dataIndex ? (
-            <Highlighter
-              highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-              searchWords={[searchText]}
-              autoEscape
-              textToHighlight={text ? text.toString() : ''}
-            />
-          ) : (
-            text
-          ),
+
       });
     
       const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -99,12 +88,12 @@ const RegisterCourse = () => {
         setSearchText(selectedKeys[0])
         setSearchedColumn(dataIndex)
       };
-    
       const handleReset = clearFilters => {
         clearFilters();
         setSearchText('')
 
       };
+
       const columns = [
         {
           title: '캠퍼스',
@@ -148,44 +137,42 @@ const RegisterCourse = () => {
             key: 'prof',
             width: '10%',
             ...getColumnSearchProps('prof')
-      
           },
       ]
+
       
 
+      const rowSelection = {
+        onChange: (selectedRowKeys, selectedRows) => {
+        setCheckKeys(selectedRows)
+        if (selectedRowKeys.length > 0){
+          setButtondisabled(true)
+        }else{
+          setButtondisabled(false)
+        }
+        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      },
+      
+        };
 
-    
-      if(loading){
         return (
-          <>
+          <div>
+            <div style={{width:'80%', margin:'0 auto',marginTop:'2rem'}}>
           <Table
-            rowSelection={{
-              type: selectionType,
-              ...rowSelection,
-            }}
-            columns={columns}
-            dataSource={courses}
-            bordered={true}
-            loading={true}
+          rowSelection={rowSelection}
+          columns={columns}
+          dataSource={courses}
+          // bordered={true}
+          loading={loading}
+          scroll={{ y: 450 }}
           />
-          </>
-        )
-      }
-      return (
-        <div>
-          <Table
-            rowSelection={{
-              type: selectionType,
-              ...rowSelection,
-            }}
-            columns={columns}
-            dataSource={courses}
-            bordered={true}
-            pagination={{ pageSize: 30 }}
-            scroll={{ y: 480 }}
-          />
+          <div style={{display: 'flex', justifyContent: 'flex-end', marginRight: '1rem'}}>
+          <Button type="primary" onClick={submitHandler} disabled={!buttondisabled} loading={loading}>
+            <Link to='/'>등록하기</Link></Button>
+          </div>
+          </div>
         </div>
-      );
+        )
   
 }
 

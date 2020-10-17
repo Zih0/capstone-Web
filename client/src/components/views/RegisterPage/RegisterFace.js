@@ -20,14 +20,6 @@ const RegisterFace = (props) => {
   };
 
 
-  const submitHandler = () => {
-    //서버에 넣은 값들을 request에 보낸다
-    
-    
-  };
-
-
-
   if (start) {
     return (
       <VideoUpload updateStartHandler={updateStartHandler} saveVideoHandler={saveVideoHandler} />

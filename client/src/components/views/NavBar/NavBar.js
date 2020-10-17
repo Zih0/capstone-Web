@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import RightMenu from './Sections/RightMenu';
-import { Drawer, Button, Icon } from 'antd';
+import { Drawer, Button,  } from 'antd';
+import { AlignRightOutlined } from '@ant-design/icons';
 import './Sections/Navbar.css';
 
 function NavBar() {
@@ -26,7 +27,7 @@ function NavBar() {
           <RightMenu mode="horizontal" />
         </div>
         <Button className="menu__mobile-button" type="primary" onClick={showDrawer}>
-          <Icon type="align-right" />
+        <AlignRightOutlined />
         </Button>
         <Drawer title="Basic Drawer" placement="right" className="menu_drawer" closable={false} onClose={onClose} visible={visible}>
           <RightMenu mode="inline" />

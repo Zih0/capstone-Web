@@ -43,18 +43,36 @@ router.post('/uploadfile', (req, res) => {
     return res.json({ success: true, file: res.req.file});
   });
 
+  router.post('/update/idincourse', (req, res) => {
+    for (let course of req.body.courses) {
+      console.log(course)
+      Course.findOneAndUpdate(
+            { _id : course._id },
+            { $addToSet : {"students": req.body.userId} },
+            
+          );
+        }
+    (err) => {
+          if (err) return console.log(err)
+        }
+      
+    return res.json({ success: true});
+    });
+  
+  
+
   
   router.get('/course', (req, res) => {
     Course.find()
       .exec((err, courseInfo) => {
         if (err) return res.status(400).json({ success: false, err });
-        console.log(courseInfo)
         return res.status(200).json({ success: true, courseInfo});
       });
 
   })
 
-});
+})
+
 
 
 

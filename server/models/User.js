@@ -27,7 +27,6 @@ const userSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-<<<<<<< HEAD
   video: {
     type: String,
     default: ''
@@ -36,9 +35,6 @@ const userSchema = mongoose.Schema({
     type: Array,
     default: [],
   },
-=======
-  video: String,
->>>>>>> master
   token: {
     type: String,
   },
