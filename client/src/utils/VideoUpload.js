@@ -3,9 +3,10 @@ import Webcam from 'react-webcam';
 import { Progress, Button, Typography } from 'antd';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import Fade from 'react-reveal/Fade'
 
 
-const { Title } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 const VideoUpload = (props) => {
   const user = useSelector((state) => state.user);
@@ -15,26 +16,28 @@ const VideoUpload = (props) => {
   const [capturing, setCapturing] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [video, setVideo] = useState('');
+  const [imgSrc, setImgSrc] = useState(null);
+
 
   const StartCaptureClickHandler = () => {
     setCapturing(true);
+    setRecordedChunks([]);
+    setImgSrc(null);
     mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
       mimeType: 'video/webm',
     });
     mediaRecorderRef.current.addEventListener('dataavailable', handleDataAvailable);
     mediaRecorderRef.current.start();
+
     let percentage = percent;
     const timer = setInterval(() => {
       percentage = percentage + 1;
       setPercent(percentage);
-      if (percentage >= 20) {
+      if (percentage >= 100) {
         setCapturing(false);
-        clearInterval(timer);
         mediaRecorderRef.current.stop();
-
-        SaveHandler(recordedChunks);
-
-        props.updateStartHandler(false);
+        setPercent(0);
+        clearInterval(timer);
       }
     }, 100);
   };
@@ -42,15 +45,25 @@ const VideoUpload = (props) => {
   const handleDataAvailable = useCallback(
     ({ data }) => {
       if (data.size > 0) {
-        setRecordedChunks((prev) => prev.concat(data));
+        setRecordedChunks([data]);
+        MakeBlob([data]);
       }
     },
     [setRecordedChunks]
   );
 
+
+  const MakeBlob = (file) => {
+    const blob = new Blob(file, {
+      type: "video/webm"
+    });
+    const url = URL.createObjectURL(blob);
+    setImgSrc(url);
+  }
+
   const SaveHandler = (file) => {
     const blob = new Blob(file, {
-      type: 'video/webm',
+      type: "video/webm"
     });
     let formData = new FormData();
     const config = {
@@ -58,39 +71,69 @@ const VideoUpload = (props) => {
     };
     formData.append('studentid', user.userData.studentId);
     formData.append('file', blob);
-
     axios.post('/api/datas/uploadfile', formData, config).then((response) => {
       if (response.data.success) {
         setVideo(response.data.filePath);
         props.saveVideoHandler(response.data.filePath);
-        
+        props.updateStartHandler(false);
+
       } else {
         alert('파일을 저장하는데 실패했습니다.');
       }
     });
-    setRecordedChunks([]);
+
   };
 
   return (
     <>
-      <div className="app">
-        <Title>영상 등록</Title>
+      <Title>영상 등록</Title>
+      <div style={{ display: 'flex' , justifyContent:'center', alignItems: 'center',  border: '1px solid lightgray', borderStyle: 'dashed', height: '300px', padding: '1rem 1rem'}}>
+         <Fade>
         <Webcam
           audio={false}
           ref={webcamRef}
           height={230}
+          width={306}
+          screenshotFormat="video/webm"
         />
-        <br />
+        </Fade>
+          {imgSrc && (
+            <Fade>
+            <div style={{marginLeft: '1rem'}}>
+            <video controls height="230" autoPlay>
+              <source src={imgSrc} type="video/webm" />
+            </video>
+            </div>
+            </Fade>
+          )}
+          
+      </div>
+      <br />
+      
+      <div style={{ display: 'flex' }}>
         {capturing ? (
           <p> 녹화중 📹 </p>
         ) : (
-          <Button onClick={StartCaptureClickHandler}>영상녹화시작</Button>
-        )}
-        <br />
+            <Button onClick={StartCaptureClickHandler}>영상 녹화</Button>
+          )}
+        <div style={{ marginLeft: '1rem' }}>
+          {imgSrc && (
+            <Button onClick={() => SaveHandler(recordedChunks)}>영상 저장</Button>
+          )}
+        </div>
+      </div>
+      <br />
+      {!imgSrc && (
         <div style={{ width: '300px' }}>
           <Progress percent={percent} showInfo={false} strokeWidth={13} />
         </div>
-      </div>
+      )}
+      
+      {imgSrc && (<Fade>
+        <Paragraph>다시 녹화하고 싶으면 <Text code>영상녹화</Text>를 눌러주시고, 해당 영상으로 등록하시려면 <Text code>영상저장</Text>을 눌러주세요.</Paragraph>
+        </Fade>
+      )}
+     
     </>
   );
 };

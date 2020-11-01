@@ -22,10 +22,10 @@ function RightMenu(props) {
   if (user.userData && !user.userData.isAuth) {
     return (
       <Menu mode={props.mode}>
-        <Menu.Item key="mail">
+        <Menu.Item key="login">
           <Link to="/login">로그인</Link>
         </Menu.Item>
-        <Menu.Item key="app">
+        <Menu.Item key="register">
           <Link to="/register">회원가입</Link>
         </Menu.Item>
       </Menu>

@@ -54,8 +54,8 @@ const RegisterCourse = () => {
       const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
           <div style={{ padding: 8 }}>
-            <Search
-              placeholder={`Search ${dataIndex}`}
+            <Input
+              placeholder={'검색어를 입력해주세요'}
               value={selectedKeys[0]}
               onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
               onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}

@@ -16,15 +16,13 @@ let storage = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, `${req.body.studentid}.webm`);
   },
-});
-
+}
+);
 const upload = multer({ storage: storage }).single('file');
 
 router.post('/uploadfile', (req, res) => {
   upload(req, res, (err) => {
-    console.log(req.body.studentid);
-    console.log(res.req.file.path)
-    
+    console.log(res.req.file.path);
     User.findOneAndUpdate(
           { studentId : req.body.studentid },
           { $set : {"video":res.req.file.path} },
@@ -36,16 +34,19 @@ router.post('/uploadfile', (req, res) => {
           //   return res.status(200).send(userInfo);
           // }
         );
-
     if (err) {
           return res.json({ success: false, err });
     }
+    console.log(req);
     return res.json({ success: true, file: res.req.file});
+
   });
+    
+  
+})
 
   router.post('/update/idincourse', (req, res) => {
     for (let course of req.body.courses) {
-      console.log(course)
       Course.findOneAndUpdate(
             { _id : course._id },
             { $addToSet : {"students": req.body.userId} },
@@ -70,10 +71,5 @@ router.post('/uploadfile', (req, res) => {
       });
 
   })
-
-})
-
-
-
 
 module.exports = router;
