@@ -74,7 +74,7 @@ function RegisterPage(props) {
       {(props) => {
         const { values, touched, errors, dirty, isSubmitting, handleChange, handleBlur, handleSubmit, handleReset } = props;
         return (
-          <div className="app">
+          <div className="contents">
             <h1>회원가입</h1>
             <br />
             <Form style={{ minWidth: '375px' }} {...formItemLayout} onSubmit={handleSubmit}>
@@ -82,7 +82,6 @@ function RegisterPage(props) {
                 <Input id="name" placeholder="이름" type="text" value={values.name} onChange={handleChange} onBlur={handleBlur} className={errors.name && touched.name ? 'text-input error' : 'text-input'} />
                 {errors.name && touched.name && <div className="input-feedback">{errors.name}</div>}
               </Form.Item>
-
               <Form.Item required label="학번">
                 <Input id="studentId" placeholder="학번" type="text" value={values.studentId} onChange={handleChange} onBlur={handleBlur} className={errors.studentId && touched.studentId ? 'text-input error' : 'text-input'} />
                 {errors.studentId && touched.studentId && <div className="input-feedback">{errors.studentId}</div>}

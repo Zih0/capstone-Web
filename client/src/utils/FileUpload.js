@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import {Typography} from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 
 
@@ -33,16 +33,6 @@ const FileUpload = (props) => {
     },
     [Video]
   );
-
-
-
-  const MakeBlob = (file) =>{
-    const blob = new Blob(file, {
-      type: "video/webm"
-    });
-    const url = URL.createObjectURL(blob);
-    setImgSrc(url);  
-}
 
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
