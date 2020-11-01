@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { registerUser } from '../../../_actions/user_actions';
@@ -87,12 +86,12 @@ function RegisterPage(props) {
                 {errors.studentId && touched.studentId && <div className="input-feedback">{errors.studentId}</div>}
               </Form.Item>
 
-              <Form.Item required label="Email" hasFeedback validateStatus={errors.email && touched.email ? 'error' : 'success'}>
+              <Form.Item required label="Email" hasFeedback>
                 <Input id="email" placeholder="Email" type="email" value={values.email} onChange={handleChange} onBlur={handleBlur} className={errors.email && touched.email ? 'text-input error' : 'text-input'} />
                 {errors.email && touched.email && <div className="input-feedback">{errors.email}</div>}
               </Form.Item>
 
-              <Form.Item required label="비밀번호" hasFeedback validateStatus={errors.password && touched.password ? 'error' : 'success'}>
+              <Form.Item required label="비밀번호" hasFeedback>
                 <Input id="password" placeholder="비밀번호" type="password" value={values.password} onChange={handleChange} onBlur={handleBlur} className={errors.password && touched.password ? 'text-input error' : 'text-input'} />
                 {errors.password && touched.password && <div className="input-feedback">{errors.password}</div>}
               </Form.Item>
@@ -104,7 +103,7 @@ function RegisterPage(props) {
 
               <Form.Item {...tailFormItemLayout}>
                 <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
-                  다음
+                  회원가입
                 </Button>
               </Form.Item>
             </Form>

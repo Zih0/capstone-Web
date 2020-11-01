@@ -8,11 +8,11 @@ const courseSchema = mongoose.Schema({
     type: String,
   },
   year: {
-    type: Number,
+    type: String,
     
   },
   class: {
-    type: Number,
+    type: String,
     
   },
   course : {
