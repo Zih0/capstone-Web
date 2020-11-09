@@ -31,6 +31,10 @@ const userSchema = mongoose.Schema({
     type: String,
     default: ''
   },
+  studentcard: {
+    type: String,
+    default: ''
+  },
   course : {
     type: Array,
     default: [],

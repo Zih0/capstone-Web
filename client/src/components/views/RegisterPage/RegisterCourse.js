@@ -30,14 +30,14 @@ const RegisterCourse = () => {
       });
     };
     
-      const submitHandler = () =>{
-
-      let body ={courses: checkKeys,
-      userId: user.userData.studentId
+    const submitHandler = () =>{
+      let body ={
+        userId: user.userData.studentId,
+        courses: checkKeys,
       }
       axios.post('/api/datas/update/idincourse', body).then((response) => {
         if (response.data.success) {
-          console.log(response.data.success)
+          console.log(response.data)
         } else {
           alert('ERROR!!');
         }
@@ -151,6 +151,7 @@ const RegisterCourse = () => {
           setButtondisabled(false)
         }
         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        console.log(checkKeys)
       },
       
         };

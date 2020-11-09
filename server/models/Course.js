@@ -13,7 +13,6 @@ const courseSchema = mongoose.Schema({
   },
   class: {
     type: String,
-    
   },
   course : {
     type: String,
@@ -24,6 +23,10 @@ const courseSchema = mongoose.Schema({
   students: {
     type: Array,
   },
+  key: {
+    type: Number,
+    unique: true
+  }
 });
 
 

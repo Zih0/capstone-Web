@@ -76,9 +76,8 @@ const VideoUpload = (props) => {
         setVideo(response.data.filePath);
         props.saveVideoHandler(response.data.filePath);
         props.updateStartHandler(false);
-
       } else {
-        alert('파일을 저장하는데 실패했습니다.');
+        console.log(response)
       }
     });
 

@@ -58,7 +58,7 @@ function LandingPage() {
           </Typography>
           <br />
           <Button type="primary" value="large" style={{ width: '100px', height: '40px' }}>
-            <Link to="/face">얼굴 등록</Link>
+            <Link to="/studentcard">얼굴 등록</Link>
           </Button>
         </div>
       </>
