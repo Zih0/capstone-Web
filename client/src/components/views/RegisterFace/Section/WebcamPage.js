@@ -9,8 +9,8 @@ const WebcamPage = (props) => {
   const [video, setVideo] = useState('');
 
 
-  const updateStartHandler = (end) => {
-    setStart(end);
+  const updateStartHandler = () => {
+    setStart(false);
   };
 
   const saveVideoHandler = (faceVideo) => {

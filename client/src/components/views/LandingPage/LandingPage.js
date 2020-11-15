@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, Typography } from 'antd';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function LandingPage() {
   const user = useSelector((state) => state.user);
-  const { Title, Paragraph } = Typography;
+  const {Paragraph } = Typography;
 
   if (user.userData && !user.userData.isAuth) {
     return (
@@ -32,7 +32,7 @@ function LandingPage() {
             </Button>
 
             <Button type="primary">
-              <Link to="/register">회원가입</Link>
+              <Link to="/studentcard">회원가입</Link>
             </Button>
           </div>
         </div>
@@ -58,7 +58,7 @@ function LandingPage() {
           </Typography>
           <br />
           <Button type="primary" value="large" style={{ width: '100px', height: '40px' }}>
-            <Link to="/studentcard">얼굴 등록</Link>
+            <Link to="/face">얼굴 등록</Link>
           </Button>
         </div>
       </>

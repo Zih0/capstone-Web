@@ -26,13 +26,16 @@ function RightMenu(props) {
           <Link to="/login">로그인</Link>
         </Menu.Item>
         <Menu.Item key="register">
-          <Link to="/register">회원가입</Link>
+          <Link to="/studentcard">회원가입</Link>
         </Menu.Item>
       </Menu>
     );
   } else {
     return (
       <Menu mode={props.mode}>
+        <Menu.Item key="mypage">
+          <Link to="/mypage">마이페이지</Link>
+        </Menu.Item>
         <Menu.Item key="logout">
           <a onClick={logoutHandler}>로그아웃</a>
         </Menu.Item>

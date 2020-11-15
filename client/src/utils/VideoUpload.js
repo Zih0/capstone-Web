@@ -1,15 +1,16 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback,useEffect } from 'react';
 import Webcam from 'react-webcam';
 import { Progress, Button, Typography } from 'antd';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import Fade from 'react-reveal/Fade'
+import Fade from 'react-reveal/Fade';
 
 
 const { Title, Paragraph, Text } = Typography;
 
 const VideoUpload = (props) => {
   const user = useSelector((state) => state.user);
+  const [webcamExists, setWebcamExists] = useState(true)
   const [percent, setPercent] = useState(0);
   const webcamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -18,8 +19,16 @@ const VideoUpload = (props) => {
   const [video, setVideo] = useState('');
   const [imgSrc, setImgSrc] = useState(null);
 
+  useEffect(() => {
+    setWebcamExists(true)
+  }, [])
+  const CloseWebcamHandler = () =>{
+    setWebcamExists(false)
+  }
+  
 
   const StartCaptureClickHandler = () => {
+    setWebcamExists(true)
     setCapturing(true);
     setRecordedChunks([]);
     setImgSrc(null);
@@ -75,7 +84,8 @@ const VideoUpload = (props) => {
       if (response.data.success) {
         setVideo(response.data.filePath);
         props.saveVideoHandler(response.data.filePath);
-        props.updateStartHandler(false);
+        props.updateStartHandler();
+        CloseWebcamHandler()
       } else {
         console.log(response)
       }
@@ -88,13 +98,13 @@ const VideoUpload = (props) => {
       <Title>영상 등록</Title>
       <div style={{ display: 'flex' , justifyContent:'center', alignItems: 'center',  border: '1px solid lightgray', borderStyle: 'dashed', height: '300px', padding: '1rem 1rem'}}>
          <Fade>
-        <Webcam
+        {webcamExists && <Webcam
           audio={false}
           ref={webcamRef}
           height={230}
           width={306}
           screenshotFormat="video/webm"
-        />
+        />}
         </Fade>
           {imgSrc && (
             <Fade>

@@ -29,7 +29,8 @@
     "react-redux": "^5.0.7",
     "react-webcam": "^5.2.1",
     "saslprep": "^1.0.3",
-    "supports-color": "^7.1.0"
+    "supports-color": "^7.1.0",
+    "tesseract.js": "^2.1.4"
   },
   "devDependencies": {
     "concurrently": "^5.3.0",

@@ -24,7 +24,7 @@ const FileUpload = (props) => {
       if (response.data.success) {
         setVideo(response.data.filePath);
         props.saveVideoHandler(response.data.filePath);
-        props.updateStartHandler(false);
+        props.updateStartHandler();
 
       } else {
         alert('파일을 저장하는데 실패했습니다.');
@@ -43,11 +43,7 @@ const FileUpload = (props) => {
 
   return (
     <div >
-    <div style={{
-    flexDirection: 'column',
-    display: 'flex',
-    alignItems: 'center',
-    height: '100vh'}}>
+    
       <Title>영상 등록</Title>
       <br/>
       <section className="container">
@@ -73,7 +69,7 @@ const FileUpload = (props) => {
         </div>
       </section>
     </div>
-    </div>
+    
   );
 };
 

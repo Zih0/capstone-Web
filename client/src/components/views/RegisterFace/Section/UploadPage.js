@@ -10,8 +10,8 @@ const WebcamPage = (props) => {
   const [video, setVideo] = useState('');
 
 
-  const updateStartHandler = (end) => {
-    setStart(end);
+  const updateStartHandler = () => {
+    setStart(false);
   };
 
   const saveVideoHandler = (faceVideo) => {
@@ -22,7 +22,9 @@ const WebcamPage = (props) => {
   if (start) {
     return (
       <Fade>
+        <div className='contents'>
       <FileUpload updateStartHandler={updateStartHandler} saveVideoHandler={saveVideoHandler} />
+      </div>
       </Fade>
     );
     

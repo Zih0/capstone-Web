@@ -31,16 +31,34 @@ router.post('/register', (req, res) => {
   });
 });
 
+
+router.post('/studentcard', (req, res) => {
+  const user = new User(req.body);
+
+  user.save((err, doc) => {
+    if (err) return res.json({ success: false, message: '이미 등록된 사용자입니다.' });
+    return res.status(200).json({
+      success: true,
+    });
+  });
+});
+
+
 router.post('/login', (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user)
       return res.json({
         loginSuccess: false,
-        message: '이메일을 찾을 수 없습니다.',
+        message: '이메일 또는 비밀번호가 틀렸습니다.',
       });
 
+    if(user.role == 1) return res.json({
+      loginSuccess: false,
+      message: '인증이 필요합니다.',
+    });
+
     user.comparePassword(req.body.password, (err, isMatch) => {
-      if (!isMatch) return res.json({ loginSuccess: false, message: '비밀번호가 틀렸습니다.' });
+      if (!isMatch) return res.json({ loginSuccess: false, message: '이메일 또는 비밀번호가 틀렸습니다.' });
 
       user.generateToken((err, user) => {
         if (err) return res.status(400).send(err);

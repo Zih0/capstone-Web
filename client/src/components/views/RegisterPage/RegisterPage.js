@@ -32,19 +32,20 @@ const tailFormItemLayout = {
 function RegisterPage(props) {
   
   const dispatch = useDispatch();
-
+  console.log(props.location.state.studentid )
+  const studentid = props.location.state.studentid 
+  const studentcard = props.location.state.filePath
   return (
     <Formik
       initialValues={{
         email: '',
-        studentId: '',
+        studentId: studentid,
         name: '',
         password: '',
         confirmPassword: '',
       }}
       validationSchema={Yup.object().shape({
         name: Yup.string().required('이름을 입력해주세요'),
-        studentId: Yup.number().min(10000000, '학번 8자리를 입력해주세요').required('학번을 입력해주세요').typeError('숫자를 입력해주세요'),
         email: Yup.string().email('이메일 형식이 잘못되었습니다').required('이메일을 입력해주세요'),
         password: Yup.string().min(6, '비밀번호는 최소 6자리 이상 입력해주세요').required('비밀번호를 입력해주세요'),
         confirmPassword: Yup.string()
@@ -57,7 +58,8 @@ function RegisterPage(props) {
             email: values.email,
             password: values.password,
             name: values.name,
-            studentId: values.studentId,
+            studentId: studentid,
+            studentcard: studentcard
           };
 
           dispatch(registerUser(dataToSubmit)).then((response) => {
@@ -84,8 +86,8 @@ function RegisterPage(props) {
                 {errors.name && touched.name && <div className="input-feedback">{errors.name}</div>}
               </Form.Item>
               <Form.Item required label="학번">
-                <Input id="studentId" placeholder="학번" type="text" value={values.studentId} onChange={handleChange} onBlur={handleBlur} className={errors.studentId && touched.studentId ? 'text-input error' : 'text-input'} />
-                {errors.studentId && touched.studentId && <div className="input-feedback">{errors.studentId}</div>}
+                <Input id="studentId" disabled type="text" value={studentid} onChange={handleChange} onBlur={handleBlur} />
+                
               </Form.Item>
 
               <Form.Item required label="Email" hasFeedback>
