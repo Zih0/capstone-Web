@@ -1,52 +1,46 @@
 import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { LoadingOutlined } from '@ant-design/icons';
-import {Typography } from 'antd';
+import {Typography, Divider } from 'antd';
 import axios from "axios";
-import { useSelector } from 'react-redux';
 
 
 const {Paragraph, Text} = Typography;
 
 const ImgUpload = (props) => {
-    const user = useSelector((state) => state.user);
-    const [Image, setImage] = useState([]);
+    const [Image, setImage] = useState('');
     const onDrop = useCallback(
     (files) => {
       let formData = new FormData();
       const config = {
         header: { "content-type": "multipart/form-data" },
       };
-      formData.append('studentid', user.userData.studentId);
       formData.append("file", files[0]);
+      props.loadingFunction(true)
 
-      axios.post("/api/datas/image", formData, config).then((response) => {
+      axios.post("/api/datas/studentcard", formData, config).then((response) => {
         if (response.data.success) {
-          setImage([...Image, response.data.filePath]);
-          props.refreshFunction([...Image, response.data.filePath]);
-          console.log(Image)
+          setImage(response.data.filePath);
+          props.refreshFunction(response);
+          console.log(response.data.filePath)
+          console.log(response.data.studentid)
         } else {
-          alert("파일을 저장하는데 실패했습니다.");
+          alert("사진에서 학번을 못찾았습니다.");
+          props.loadingFunction()
         }
       });
     },
     [Image]
   );
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+
+  const { getRootProps, getInputProps, isDragActive,acceptedFiles } = useDropzone({
     onDrop,
   });
 
-  const DeleteHandler = (image) => {
-    const currentIndex = Image.indexOf(image);
-
-    let newImage = [...Image];
-    newImage.splice(currentIndex, 1);
-    setImage(newImage);
-    props.refreshFunction(newImage);
-  };
+  const files = acceptedFiles.map(file => <li key={file.path}>{file.path}</li>);
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <div>
       <section className="container">
         <div
           style={{
@@ -63,31 +57,17 @@ const ImgUpload = (props) => {
           {isDragActive ? (
             <LoadingOutlined  style={{ fontSize: "3rem" }} />
           ) : (
-            <Paragraph style={{ fontSize: "1rem", textAlign:'center' }}> 학생증 사진을 <Text type="danger">드래그</Text>하거나,
+            <Paragraph style={{ fontSize: "1rem", textAlign:'center' }}> e-id 사진을 <Text type="danger">드래그</Text>하거나,
             <br/>박스를  <Text type="danger">클릭</Text>해주세요 </Paragraph> 
           )}
         </div>
+        <Divider/>
       </section>
-
-      <div
-        style={{
-          display: "flex",
-          width: "350px",
-          height: "240px",
-          overflowX: "scroll",
-        }}
-      >
-        {Image.map((image, index) => (
-          <div onClick={() => DeleteHandler(image)} key={index}>
-            <img
-              style={{ minWidth: "200px", width: "200px", height: "160px",marginLeft:'1rem'}}
-              src={`http://localhost:5000/${image}`}
-            />
-          </div>
-        ))}
-      </div>
+      <aside>
+        <ul>{files}</ul>
+      </aside>
     </div>
-  );
-};
+    )
+  }
 
 export default ImgUpload;
