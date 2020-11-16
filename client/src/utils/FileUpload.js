@@ -10,7 +10,6 @@ const {Title, Paragraph, Text} = Typography;
 const FileUpload = (props) => {
   const user = useSelector((state) => state.user);
   const [Video, setVideo] = useState('');
-  const [ImgSrc, setImgSrc] = useState('')
   const onDrop = useCallback(
     (files) => {
       let formData = new FormData();
@@ -25,7 +24,6 @@ const FileUpload = (props) => {
         setVideo(response.data.filePath);
         props.saveVideoHandler(response.data.filePath);
         props.updateStartHandler();
-
       } else {
         alert('파일을 저장하는데 실패했습니다.');
       }

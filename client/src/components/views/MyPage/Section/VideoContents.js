@@ -20,7 +20,11 @@ const VideoContents = () => {
         setVideo(faceVideo);
       };
     useEffect(() => {
-        setPath(`http://localhost:5000/uploads/${user.userData.studentId}.webm`)
+        if (user){
+            console.log(user)
+            setPath(`http://localhost:5000/uploads/${user.userData.studentId}.webm`)
+        }
+        console.log(path)
     }, [video])
 
     const ShowWebcamHandler = () =>{

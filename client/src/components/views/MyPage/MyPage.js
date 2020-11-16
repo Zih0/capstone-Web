@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from 'react'
-import { Button, Typography , Divider, Row,Col, Modal,Layout, Menu } from 'antd';
+import React, {useState} from 'react'
+import { Layout, Menu } from 'antd';
 import { BookOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
-import {Link} from 'react-router-dom'
 import Fade from 'react-reveal/Fade'
 
 import './Mypage.css'
@@ -10,7 +9,6 @@ import CheckContetns from './Section/CheckContents';
 import CourseContents from './Section/CourseContents';
 
 const { Content, Sider } = Layout;
-const { Title, Paragraph , Text} = Typography;
 
 const MyPage = () => {
     const [visiblevideo, setVisiblevideo] = useState(true)
@@ -44,7 +42,8 @@ const MyPage = () => {
       }}
         onCollapse={(collapsed, type) => {
         console.log(collapsed, type);
-      }}> 
+      }}>
+
       <div className='logo'>
         <Menu
           mode="inline"
