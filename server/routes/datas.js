@@ -1,10 +1,12 @@
 const Tesseract = require('tesseract.js');
-
+const {PythonShell} = require('python-shell');
+const axios = require('axios');
 const express = require('express');
 const router = express.Router();
 const { User } = require('../models/User');
 const { Course } = require('../models/Course');
 const { auth } = require('../middleware/auth');
+
 
 const multer = require('multer');
 //=================================
@@ -58,30 +60,39 @@ router.post('/uploadfile', (req, res) => {
         });
 });
 
+const appkey = 'ec358a4773c993c7dba039d6d3555c2b'
 
 router.post('/studentcard', (req, res) => {
-  let dataList = []
   let studentid =''
   uploadImage(req, res, (err) => {
-    Tesseract.recognize(
-      res.req.file.path,
-      'eng',
-      { logger: m => console.log(m) }
-    ).then(({ data: { text } }) => {
-      dataList = text.trim().split('\n')
-      dataList.forEach(function(text) {
-        if (text.match(/20\d{6}/))
-        {
-          studentid = text.match(/20\d{6}/)[0]
-        }
+    let options = {
+      mode: 'text',
+      pythonPath: '/usr/bin/python3',
+      pythonOptions: ['-u'],
+      args: [res.req.file.path,appkey]
+    };
+    PythonShell.run('/Users/ziho/testapp2/capstoneWeb/server/routes/kakao-ocr.py', options, (err, result) => {
+      if (err) console.log(err); 
+      studentid = result
+      if (studentid == '') return res.status(400).send({success:false, err})
+      return res.status(200).send({success:true, filePath: res.req.file.path, studentid: studentid});
     });
-    if (studentid == '') return res.json({ success: false, err });
-    console.log(studentid);
-    return res.status(200).send({success:true, filePath: res.req.file.path, studentid: studentid});
-    
+  
+    // Tesseract.recognize(
+    //   res.req.file.path,
+    //   'eng',
+    //   { logger: m => console.log(m) }
+    // ).then(({ data: { text } }) => {
+    //   dataList = text.trim().split('\n')
+    //   dataList.forEach(function(text) {
+    //     if (text.match(/20\d{6}/))
+    //     {
+    //       studentid = text.match(/20\d{6}/)[0]
+    //     }
+    // });
+
     });
     });
-});
 
 router.post('/update/idincourse', (req, res) => {
     for (let course of req.body.courses) {

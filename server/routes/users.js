@@ -32,17 +32,6 @@ router.post('/register', (req, res) => {
 });
 
 
-router.post('/studentcard', (req, res) => {
-  const user = new User(req.body);
-
-  user.save((err, doc) => {
-    if (err) return res.json({ success: false, message: '이미 등록된 사용자입니다.' });
-    return res.status(200).json({
-      success: true,
-    });
-  });
-});
-
 
 router.post('/login', (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
