@@ -22,6 +22,7 @@ const VideoUpload = (props) => {
   useEffect(() => {
     setWebcamExists(true)
   }, [])
+  
   const CloseWebcamHandler = () =>{
     setWebcamExists(false)
   }

@@ -63,6 +63,7 @@ def main():
         image_path = resize_impath
 
     output = kakao_ocr(image_path, appkey).json()
+    text =''
     for item in output['result']:
         if re.compile('\d{8}').search(''.join(item['recognition_words'][0].split())):
             text = item['recognition_words'][0]
