@@ -22,7 +22,7 @@ function ProfessorLandingPage() {
 				</Typography>
 				<br />
 				<Button type="primary">
-					<Link to="/studentcard">회원가입</Link>
+					<Link to="/register/professor">회원가입</Link>
 				</Button>
 			</div>
 		</>

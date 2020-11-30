@@ -29,7 +29,7 @@ def kakao_ocr_resize(image_path: str):
         height, width, _ = height, width, _ = image.shape
 
         # api 사용전에 이미지가 resize된 경우, recognize시 resize된 결과를 사용해야함.
-        image_path = "{}.jpg".format(image_path)
+        image_path = "{}".format(image_path)
         cv2.imwrite(image_path, image)
 
         return image_path

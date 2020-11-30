@@ -30,8 +30,18 @@ let storageImage = multer.diskStorage({
 	},
 });
 
+let storageProf = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, 'uploads/professor/');
+	},
+	filename: (req, file, cb) => {
+		cb(null, `${Date.now()}_${file.originalname}`);
+	},
+});
+
 const uploadVideo = multer({ storage: storageVideo }).single('file');
 const uploadImage = multer({ storage: storageImage }).single('file');
+const uploadProf = multer({ storage: storageProf }).single('file');
 
 router.post('/uploadfile', (req, res) => {
 	uploadVideo(req, res, (err) => {
@@ -53,6 +63,13 @@ router.post('/uploadfile', (req, res) => {
 		//   console.log(req);
 		//   return res.json({ success: true, file: res.req.file});
 		// }
+	});
+});
+
+router.post('/professor/image', (req, res) => {
+	uploadProf(req, res, (err) => {
+		if (err) return res.json({ success: false, err });
+		return res.status(200).send({ success: true, filePath: res.req.file.path });
 	});
 });
 
@@ -97,6 +114,9 @@ router.post('/studentcard', (req, res) => {
 });
 
 router.post('/update/idincourse', (req, res) => {
+	User.findOneAndUpdate({ studentId: req.body.userId }, { $set: { course: [] } });
+	Course.updateMany({ $pull: { students: req.body.userId } });
+
 	for (let course of req.body.courses) {
 		Course.findOneAndUpdate(
 			{ _id: course._id },
