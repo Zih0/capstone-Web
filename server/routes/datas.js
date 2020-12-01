@@ -83,7 +83,7 @@ router.post('/studentcard', (req, res) => {
 			args: [res.req.file.path, appkey],
 		};
 		PythonShell.run(
-			'/Users/ziho/testapp2/capstoneWeb/server/routes/kakao-ocr.py',
+			'/home/ubuntu/capstone-Web/server/routes/kakao-ocr.py',
 			options,
 			(err, result) => {
 				if (err) console.log(err);
