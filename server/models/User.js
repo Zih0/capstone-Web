@@ -46,6 +46,9 @@ const userSchema = mongoose.Schema({
 	tokenExp: {
 		type: Number,
 	},
+	update:{
+		type: Number,
+	  }
 });
 
 userSchema.pre('save', function (next) {

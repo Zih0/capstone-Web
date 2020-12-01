@@ -1,6 +1,4 @@
-const Tesseract = require('tesseract.js');
 const { PythonShell } = require('python-shell');
-const axios = require('axios');
 const express = require('express');
 const router = express.Router();
 const { User } = require('../models/User');
@@ -14,7 +12,7 @@ const multer = require('multer');
 
 let storageVideo = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, 'uploads/');
+		cb(null, 'uploads/embedding/');
 	},
 	filename: (req, file, cb) => {
 		cb(null, `${req.body.studentid}.webm`);
@@ -23,7 +21,7 @@ let storageVideo = multer.diskStorage({
 
 let storageImage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, 'uploads/');
+		cb(null, 'uploads/card/');
 	},
 	filename: (req, file, cb) => {
 		cb(null, `${Date.now()}_${file.originalname}`);
@@ -97,37 +95,54 @@ router.post('/studentcard', (req, res) => {
 					.send({ success: true, filePath: res.req.file.path, studentid: studentid });
 			}
 		);
-
-		// Tesseract.recognize(
-		//   res.req.file.path,
-		//   'eng',
-		//   { logger: m => console.log(m) }
-		// ).then(({ data: { text } }) => {
-		//   dataList = text.trim().split('\n')
-		//   dataList.forEach(function(text) {
-		//     if (text.match(/20\d{6}/))
-		//     {
-		//       studentid = text.match(/20\d{6}/)[0]
-		//     }
-		// });
 	});
 });
 
 router.post('/update/idincourse', (req, res) => {
-	User.findOneAndUpdate({ studentId: req.body.userId }, { $set: { course: [] } });
-	Course.updateMany({ $pull: { students: req.body.userId } });
+	let keys = [];
+	User.find({ studentId: req.body.userId }, { course: 1 }).exec((err, info) => {
+		for (let i of info[0].course) {
+			keys.push(i.key);
+		}
+	});
+
+	User.updateMany({ studentId: req.body.userId }, { $set: { course: [] } }).exec();
+
+	Course.updateMany(
+		{},
+		{ $pull: { students: { $in: [req.body.userId] } } },
+		{ multi: true }
+	).exec();
+
+	for (let key of keys) {
+		if (!(key in req.body.courses)) {
+			Course.update(
+				{ key: key },
+				{ "$set": { "update": 1 } },
+				{
+					new: true,
+				},
+				(err) => {
+					if (err) return res.json({ success: false, err });
+				}
+			);
+		}
+	}
 
 	for (let course of req.body.courses) {
-		Course.findOneAndUpdate(
-			{ _id: course._id },
-			{ $addToSet: { students: req.body.userId } },
-			{
-				new: true,
-			},
-			(err) => {
-				if (err) return res.json({ success: false, err });
-			}
-		);
+		if (course in keys) {
+			Course.findOneAndUpdate(
+				{ _id: course._id },
+				{ $addToSet: { students: req.body.userId } }
+			).exec();
+		} else {
+			console.log("Plz")
+			Course.update(
+				{ _id: course._id },
+				{ "$set": { "update": 1 } , $addToSet: { students: req.body.userId } }
+			).exec();
+		}
+
 		User.findOneAndUpdate(
 			{ studentId: req.body.userId },
 			{

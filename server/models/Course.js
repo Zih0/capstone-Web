@@ -26,6 +26,9 @@ const courseSchema = mongoose.Schema({
   key: {
     type: Number,
     unique: true
+  },
+  update:{
+    type: Number,
   }
 });
 

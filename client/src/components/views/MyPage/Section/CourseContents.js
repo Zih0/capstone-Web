@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title } = Typography;
 
 const CourseContents = () => {
 	const user = useSelector((state) => state.user);
@@ -16,7 +16,7 @@ const CourseContents = () => {
 	const [searchedColumn, setSearchedColumn] = useState('');
 	const [buttondisabled, setButtondisabled] = useState(false);
 	const [checkKeys, setCheckKeys] = useState([]);
-
+	const [Selected, setSelected] = useState([]);
 	const getCourses = () => {
 		setLoading(true);
 		axios.get('/api/datas/course').then((response) => {
@@ -24,6 +24,23 @@ const CourseContents = () => {
 				setCourses([...response.data.courseInfo]);
 				console.log(response.data.courseInfo);
 				setLoading(false);
+				console.log(Selected);
+			} else {
+				alert('수업 정보를 가져오는데 실패했습니다.');
+			}
+		});
+	};
+
+	const getSelectedCourses = () => {
+		let body = {
+			userId: user.userData.studentId,
+		};
+
+		axios.post('/api/datas/check', body).then((response) => {
+			if (response.data.success) {
+				for (let course of response.data.checkList[0].course) {
+					setSelected([...Selected, course.key]);
+				}
 			} else {
 				alert('수업 정보를 가져오는데 실패했습니다.');
 			}
@@ -45,6 +62,7 @@ const CourseContents = () => {
 	};
 
 	useEffect(() => {
+		getSelectedCourses();
 		getCourses();
 	}, []);
 
