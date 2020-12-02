@@ -136,7 +136,6 @@ router.post('/update/idincourse', (req, res) => {
 				{ $addToSet: { students: req.body.userId } }
 			).exec();
 		} else {
-			console.log("Plz")
 			Course.update(
 				{ _id: course._id },
 				{ "$set": { "update": 1 } , $addToSet: { students: req.body.userId } }
@@ -183,6 +182,17 @@ router.post('/update/idincourse', (req, res) => {
 	// return res.status(200).send({success:true});
 	return res.status(200).send({ success: true });
 });
+
+
+
+router.post('/professor/courses', (req, res) => {
+	Course.find({ prof: req.body.name, major: req.body.major }).exec((err, courseList) => {
+		if (err) return res.status(400).json({ success: false, err });
+		return res.status(200).json({ success: true, courseList });
+	});
+});
+
+
 
 router.post('/check', (req, res) => {
 	User.find({ studentId: req.body.userId }, { course: 1 }).exec((err, checkList) => {

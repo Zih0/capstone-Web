@@ -9,6 +9,9 @@ const userSchema = mongoose.Schema({
 		type: String,
 		maxlength: 50,
 	},
+	major: {
+		type: String
+	},
 	studentId: {
 		type: Number,
 		minglength: 8,
