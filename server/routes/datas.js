@@ -37,9 +37,19 @@ let storageProf = multer.diskStorage({
 	},
 });
 
+
+let storageAtt = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, 'uploads/verify/');
+	},
+	filename: (req, file, cb) => {
+		cb(null, file.originalname);
+	},
+});
 const uploadVideo = multer({ storage: storageVideo }).single('file');
 const uploadImage = multer({ storage: storageImage }).single('file');
 const uploadProf = multer({ storage: storageProf }).single('file');
+const uploadAtt = multer({storage: storageAtt}).single('file');
 
 router.post('/uploadfile', (req, res) => {
 	uploadVideo(req, res, (err) => {
@@ -64,6 +74,15 @@ router.post('/uploadfile', (req, res) => {
 	});
 });
 
+router.post('/verify', (req, res) => {
+	uploadAtt(req, res, (err) => {
+		if (err) return res.json({success:false, err})
+		return res.json({success:true, filePath:res.req.file.path})
+	});
+
+});
+
+
 router.post('/professor/image', (req, res) => {
 	uploadProf(req, res, (err) => {
 		if (err) return res.json({ success: false, err });
@@ -83,7 +102,7 @@ router.post('/studentcard', (req, res) => {
 			args: [res.req.file.path, appkey],
 		};
 		PythonShell.run(
-			'/home/ubuntu/capstone-Web/server/routes/kakao-ocr.py',
+			'/home/ubuntu/capstone-Web/server/python/kakao-ocr.py',
 			options,
 			(err, result) => {
 				if (err) console.log(err);

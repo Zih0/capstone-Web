@@ -20,12 +20,11 @@ const VideoContents = () => {
         setVideo(faceVideo);
       };
     useEffect(() => {
-        if (user){
-            console.log(user)
-            setPath(`http://localhost:5000/uploads/${user.userData.studentId}.webm`)
+        const paths = (user)=>{
+            setPath(`https://chul-check.tk:5000/uploads/embedding/${user.userData.studentId}.webm`)
         }
-        console.log(path)
-    }, [video])
+
+    }, [user])
 
     const ShowWebcamHandler = () =>{
         setVisiblewebcam(true)

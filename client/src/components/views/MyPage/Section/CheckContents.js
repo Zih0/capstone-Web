@@ -26,7 +26,9 @@ const CheckContetns = () => {
       });
     }
     useEffect(() => {
+        const checks =  (user)=>{
         getCheck()
+      }
     }, [])
 
     const columns = [
