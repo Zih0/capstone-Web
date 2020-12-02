@@ -8,6 +8,14 @@ const { auth } = require('../middleware/auth');
 //             User
 //=================================
 
+router.post('/professor', (req, res) => {
+	User.findOne({ _id : req.body.id }, (err, user) => {
+		if(err) return res.json({success:false,err})
+		return res.json({success: true, info:user})
+})
+})
+
+
 router.get('/auth', auth, (req, res) => {
 	res.status(200).json({
 		_id: req.user._id,
