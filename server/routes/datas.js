@@ -37,7 +37,6 @@ let storageProf = multer.diskStorage({
 	},
 });
 
-
 let storageAtt = multer.diskStorage({
 	destination: (req, file, cb) => {
 		cb(null, 'uploads/verify/');
@@ -46,10 +45,11 @@ let storageAtt = multer.diskStorage({
 		cb(null, file.originalname);
 	},
 });
+
 const uploadVideo = multer({ storage: storageVideo }).single('file');
 const uploadImage = multer({ storage: storageImage }).single('file');
 const uploadProf = multer({ storage: storageProf }).single('file');
-const uploadAtt = multer({storage: storageAtt}).single('file');
+const uploadAtt = multer({ storage: storageAtt }).single('file');
 
 router.post('/uploadfile', (req, res) => {
 	uploadVideo(req, res, (err) => {
@@ -65,23 +65,15 @@ router.post('/uploadfile', (req, res) => {
 				return res.status(200).send({ success: true, userInfo });
 			}
 		);
-		//   if (err) {
-		//         return res.json({ success: false, err });
-		//   }
-		//   console.log(req);
-		//   return res.json({ success: true, file: res.req.file});
-		// }
 	});
 });
 
 router.post('/verify', (req, res) => {
 	uploadAtt(req, res, (err) => {
-		if (err) return res.json({success:false, err})
-		return res.json({success:true, filePath:res.req.file.path})
+		if (err) return res.json({ success: false, err });
+		return res.json({ success: true, filePath: res.req.file.path });
 	});
-
 });
-
 
 router.post('/professor/image', (req, res) => {
 	uploadProf(req, res, (err) => {
@@ -137,7 +129,7 @@ router.post('/update/idincourse', (req, res) => {
 		if (!(key in req.body.courses)) {
 			Course.update(
 				{ key: key },
-				{ "$set": { "update": 1 } },
+				{ $set: { update: 1 } },
 				{
 					new: true,
 				},
@@ -157,7 +149,7 @@ router.post('/update/idincourse', (req, res) => {
 		} else {
 			Course.update(
 				{ _id: course._id },
-				{ "$set": { "update": 1 } , $addToSet: { students: req.body.userId } }
+				{ $set: { update: 1 }, $addToSet: { students: req.body.userId } }
 			).exec();
 		}
 
@@ -165,28 +157,7 @@ router.post('/update/idincourse', (req, res) => {
 			{ studentId: req.body.userId },
 			{
 				$addToSet: {
-					course: {
-						key: course.key,
-						coursename: course.course,
-						check: {
-							1: '',
-							2: '',
-							3: '',
-							4: '',
-							5: '',
-							6: '',
-							6: '',
-							7: '',
-							8: '',
-							9: '',
-							10: '',
-							11: '',
-							12: '',
-							13: '',
-							14: '',
-							15: '',
-						},
-					},
+					course: [course.key],
 				},
 			},
 			{
@@ -202,16 +173,12 @@ router.post('/update/idincourse', (req, res) => {
 	return res.status(200).send({ success: true });
 });
 
-
-
 router.post('/professor/courses', (req, res) => {
 	Course.find({ prof: req.body.name, major: req.body.major }).exec((err, courseList) => {
 		if (err) return res.status(400).json({ success: false, err });
 		return res.status(200).json({ success: true, courseList });
 	});
 });
-
-
 
 router.post('/check', (req, res) => {
 	User.find({ studentId: req.body.userId }, { course: 1 }).exec((err, checkList) => {
@@ -225,6 +192,44 @@ router.get('/course', (req, res) => {
 		if (err) return res.status(400).json({ success: false, err });
 		return res.status(200).json({ success: true, courseInfo });
 	});
+});
+
+router.post('/professor/checks', (req, res) => {
+	let keys = [];
+	let checklist = [];
+	let class1 = [];
+	Course.find({ prof: req.body.name, major: '소프트웨어학부' }, { key: 1 }, (err, courseList) => {
+		if (err) return res.json({ success: false, err });
+		for (let key of courseList) {
+			keys.push(key.key);
+		}
+		for (let key of keys) {
+			class1 = [];
+			console.log(class1);
+			Course.find({ key: key }, { students: 1 }, (err, course) => {
+				class1 = [];
+				if (err) return res.json({ success: false, err });
+				for (let s of course[0].students) {
+					User.find({ studentId: s }, { studentId: 1, course: 1 }, (err, studentData) => {
+						for (let c of studentData[0].course) {
+							if (key == c.key) {
+								console.log(c.key);
+								class1.push({ id: studentData[0].studentId, check: c.check });
+								console.log(class1);
+							}
+						}
+					});
+				}
+				checklist.push({ key: key, class: class1 });
+			});
+		}
+	});
+
+	const returnfunction = () => {
+		return res.json({ success: true, checklist: checklist });
+	};
+
+	setTimeout(returnfunction, 9000);
 });
 
 module.exports = router;

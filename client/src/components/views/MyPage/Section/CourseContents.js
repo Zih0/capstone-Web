@@ -62,10 +62,10 @@ const CourseContents = () => {
 	};
 
 	useEffect(() => {
-		const callback = (user) =>{
-		getSelectedCourses();
 		getCourses();
-	}
+		const callback = (user) => {
+			getSelectedCourses();
+		};
 	}, []);
 
 	// rowSelection object indicates the need for row selection
