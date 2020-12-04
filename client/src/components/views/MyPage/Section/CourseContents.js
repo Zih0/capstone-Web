@@ -31,22 +31,6 @@ const CourseContents = () => {
 		});
 	};
 
-	const getSelectedCourses = () => {
-		let body = {
-			userId: user.userData.studentId,
-		};
-
-		axios.post('/api/datas/check', body).then((response) => {
-			if (response.data.success) {
-				for (let course of response.data.checkList[0].course) {
-					setSelected([...Selected, course.key]);
-				}
-			} else {
-				alert('수업 정보를 가져오는데 실패했습니다.');
-			}
-		});
-	};
-
 	const submitHandler = () => {
 		let body = {
 			userId: user.userData.studentId,
@@ -54,7 +38,7 @@ const CourseContents = () => {
 		};
 		axios.post('/api/datas/update/idincourse', body).then((response) => {
 			if (response.data.success) {
-				console.log(response.data);
+				console.log(response.data.success);
 			} else {
 				alert('ERROR!!');
 			}
@@ -63,9 +47,6 @@ const CourseContents = () => {
 
 	useEffect(() => {
 		getCourses();
-		const callback = (user) => {
-			getSelectedCourses();
-		};
 	}, []);
 
 	// rowSelection object indicates the need for row selection

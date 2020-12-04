@@ -161,60 +161,63 @@ router.post('/update/idincourse', (req, res) => {
 		}
 	});
 
-	User.updateMany({ studentId: req.body.userId }, { $set: { course: [] } }).exec();
-
-	Course.updateMany(
-		{},
-		{ $pull: { students: { $in: [req.body.userId] } } },
-		{ multi: true }
-	).exec();
-
-	for (let key of keys) {
-		if (!(key in req.body.courses)) {
-			Course.update(
-				{ key: key },
-				{ $set: { update: 1 } },
-				{
-					new: true,
-				},
-				(err) => {
-					if (err) return res.json({ success: false, err });
+	User.updateMany({ studentId: req.body.userId }, { $set: { course: [] } }).exec(
+		Course.updateMany(
+			{},
+			{ $pull: { students: { $in: [req.body.userId] } } },
+			{ multi: true }
+		).exec(() => {
+			for (let key of keys) {
+				if (!(key in req.body.courses)) {
+					Course.update(
+						{ key: key },
+						{ $set: { update: 1 } },
+						{
+							new: true,
+						},
+						(err) => {
+							if (err) return res.json({ success: false, err });
+						}
+					);
 				}
-			);
-		}
-	}
-
-	for (let course of req.body.courses) {
-		if (course in keys) {
-			Course.findOneAndUpdate(
-				{ _id: course._id },
-				{ $addToSet: { students: req.body.userId } }
-			).exec();
-		} else {
-			Course.update(
-				{ _id: course._id },
-				{ $set: { update: 1 }, $addToSet: { students: req.body.userId } }
-			).exec();
-		}
-
-		User.findOneAndUpdate(
-			{ studentId: req.body.userId },
-			{
-				$addToSet: {
-					course: [course.key],
-				},
-			},
-			{
-				new: true,
-			},
-			(err) => {
-				if (err) return res.json({ success: false, err });
 			}
-		);
-	}
+
+			for (let course of req.body.courses) {
+				if (course in keys) {
+					Course.findOneAndUpdate(
+						{ _id: course._id },
+						{ $addToSet: { students: req.body.userId } }
+					).exec();
+				} else {
+					Course.updateOne(
+						{ _id: course._id },
+						{ $set: { update: 1 }, $addToSet: { students: req.body.userId } }
+					).exec();
+				}
+				console.log(course.key);
+				User.findOneAndUpdate(
+					{ studentId: req.body.userId },
+					{
+						$addToSet: {
+							course: course.key,
+						},
+					},
+					{
+						new: true,
+					},
+					(err, info) => {
+						console.log(info);
+					}
+				);
+			}
+		})
+	);
+
 	//     if(err) return res.json({ success: false, err });
 	// return res.status(200).send({success:true});
-	return res.status(200).send({ success: true });
+	setTimeout(() => {
+		return res.status(200).send({ success: true });
+	}, 2000);
 });
 
 router.post('/professor/courses', (req, res) => {
