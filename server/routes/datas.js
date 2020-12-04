@@ -77,7 +77,7 @@ router.post('/verify/test', (req, res) => {
 		args: [
 			'/home/ubuntu/capstone-Web' + 'uplodas/verify/0.avi',
 			req.body.key,
-			15,
+			req.body.week,
 			req.body.gesture,
 			'테스트101',
 		],
