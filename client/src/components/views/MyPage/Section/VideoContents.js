@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Typography, Divider, Row, Col, Modal } from 'antd';
-import { useSelector } from 'react-redux';
 import VideoUpload from '../../../../utils/VideoUpload';
 import FileUpload from '../../../../utils/FileUpload';
 import Fade from 'react-reveal/Fade';
 
 const { Title } = Typography;
 
-const VideoContents = () => {
-	const user = useSelector((state) => state.user);
+const VideoContents = (props) => {
 	const [path, setPath] = useState('');
 	const [visiblewebcam, setVisiblewebcam] = useState(false);
 	const [visiblefile, setVisiblefile] = useState(false);
@@ -18,11 +16,19 @@ const VideoContents = () => {
 		setVideo(faceVideo);
 	};
 
+	const getVideo = () => {
+		return new Promise((resolve, reject) => {
+			resolve(`https://chul-check.tk/../uploads/embedding/${props.user.userData.studentId}.webm`);
+		});
+	};
+
 	useEffect(() => {
-		if (user && user.userData.studentId) {
-			setPath(`https://chul-check.tk/../uploads/embedding/${user.userData.studentId}.webm`);
-		}
-	}, [user]);
+		const fetchVideo = async () => {
+			const Data = await getVideo();
+			setPath(Data);
+		};
+		fetchVideo();
+	}, []);
 
 	const ShowWebcamHandler = () => {
 		setVisiblewebcam(true);

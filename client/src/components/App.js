@@ -14,7 +14,9 @@ import RegisterStudentCard from './views/RegisterPage/RegisterStudentCard';
 import MyPage from './views/MyPage/MyPage';
 import ProfessorLandingPage from './views/LandingPage/ProfessorLandingPage';
 import RegisterProfessor from './views/RegisterPage/RegisterProfessor';
-import ProfessorPage from './views/MyPage/ProfessorPage'
+import ProfessorPage from './views/MyPage/ProfessorPage';
+import ProfLoginPage from './views/LoginPage/ProfLoginPage';
+
 //null   Anyone Can go inside
 //true   only logged in user can go inside
 //false  logged in user can't go inside
@@ -23,11 +25,12 @@ function App() {
 	return (
 		<Suspense fallback={<div>Loading...</div>}>
 			<Route exact path="/professor" component={Auth(ProfessorLandingPage, null)} />
-			<Route exact path="/register/professor" component={Auth(RegisterProfessor, null)} />
-			<Route exact path="/professor/mypage" component={Auth(ProfessorPage, null)} />
 			<NavBar />
 			<div style={{ paddingTop: '58px', minHeight: 'calc(100vh - 80px)' }}>
 				<Switch>
+					<Route exact path="/login/professor" component={Auth(ProfLoginPage, false)} />
+					<Route exact path="/register/professor" component={Auth(RegisterProfessor, null)} />
+					<Route exact path="/professor/mypage" component={Auth(ProfessorPage, true)} />
 					<Route exact path="/" component={Auth(LandingPage, null)} />
 					<Route exact path="/login" component={Auth(LoginPage, false)} />
 					<Route exact path="/register" component={Auth(RegisterPage, false)} />
