@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
 		maxlength: 50,
 	},
 	major: {
-		type: String
+		type: String,
 	},
 	studentId: {
 		type: Number,
@@ -49,9 +49,10 @@ const userSchema = mongoose.Schema({
 	tokenExp: {
 		type: Number,
 	},
-	update:{
+	update: {
 		type: Number,
-	  }
+		default: 1,
+	},
 });
 
 userSchema.pre('save', function (next) {
