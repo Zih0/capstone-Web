@@ -29,6 +29,10 @@ const userSchema = mongoose.Schema({
 		type: Number,
 		default: 0,
 	},
+	update: {
+		type: String,
+		default: '1',
+	},
 	video: {
 		type: String,
 		default: '',
@@ -48,10 +52,6 @@ const userSchema = mongoose.Schema({
 	},
 	tokenExp: {
 		type: Number,
-	},
-	update: {
-		type: Number,
-		default: 1,
 	},
 });
 
