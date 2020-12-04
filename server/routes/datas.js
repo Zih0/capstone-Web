@@ -96,6 +96,7 @@ router.post('/verify', (req, res) => {
 			pythonOptions: ['-u'],
 			args: [res.req.file.path, key, week, finger, name],
 		};
+		if (err) return res.json({ success: false, err });
 		PythonShell.run('/home/ubuntu/faceRecog/chulCheck.py', options, (err, result) => {
 			if (err) return res.json({ success: false });
 			return res.status(200).send({ success: true, result: result });
@@ -209,67 +210,22 @@ router.post('/professor/courses', (req, res) => {
 });
 
 router.post('/check', (req, res) => {
-	Check.find({ studentid: req.body.userId }, { _id: 0, studentid: 0 }).exec((err, checkList) => {
+	Check.find({ studentid: req.body.userId }, { studentid: 0 }).exec((err, checkList) => {
+		console.log(checkList);
 		if (err) return res.status(400).json({ success: false, err });
-
-		checkList.sort(function (a, b) {
-			return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
-		});
-		let courseList = [];
-		for (let c of checkList) {
-			courseList.push(c.name);
-		}
-		courseList = [...new Set(courseList)];
-		let _list = [];
-		for (let c of courseList) {
-			_list.push({ name: c, check: [] });
-		}
-		console.log(_list);
-		for (let c of _list) {
-			for (let s of checkList) {
-				if (s.name == c.name) {
-					delete s.name;
-					delete s.key;
-					c.check.push(s);
-				}
-			}
-		}
-		setTimeout(() => {
-			return res.status(200).json({ success: true, checkList: _list });
-		}, 2000);
+		return res.status(200).json({ success: true, checkList: checkList });
 	});
 });
 
 router.post('/check/proffesor', (req, res) => {
-	Check.find({ studentid: req.body.userId }, { _id: 0, studentid: 0 }).exec((err, checkList) => {
-		if (err) return res.status(400).json({ success: false, err });
-
-		checkList.sort(function (a, b) {
-			return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
-		});
-		let courseList = [];
-		for (let c of checkList) {
-			courseList.push(c.name);
-		}
-		courseList = [...new Set(courseList)];
-		let _list = [];
-		for (let c of courseList) {
-			_list.push({ name: c, check: [] });
-		}
-		console.log(_list);
-		for (let c of _list) {
-			for (let s of checkList) {
-				if (s.name == c.name) {
-					delete s.name;
-					delete s.key;
-					c.check.push(s);
-				}
+	Course.find({ prof: req.body.name, major: req.body.major }, { _id: 0, key: 1 }).exec(
+		(err, courseList) => {
+			if (err) return res.status(400).json({ success: false, err });
+			for (course of courseList) {
+				Check.find({ key: course.key }, { _id: 0, key: 0 });
 			}
 		}
-		setTimeout(() => {
-			return res.status(200).json({ success: true, checkList: _list });
-		}, 4000);
-	});
+	);
 });
 
 router.get('/course', (req, res) => {

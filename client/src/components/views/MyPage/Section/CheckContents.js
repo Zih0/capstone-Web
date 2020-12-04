@@ -21,7 +21,51 @@ const CheckContetns = () => {
 			axios.post('/api/datas/check', body).then((response) => {
 				if (response.data.success) {
 					console.log(response.data.checkList);
-					resolve(response.data.checkList);
+					async function setToList(checkList) {
+						checkList.sort(function (a, b) {
+							return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+						});
+						let courseList = [];
+
+						for (let c of checkList) {
+							courseList.push(c.name);
+						}
+						courseList = [...new Set(courseList)];
+						return courseList;
+					}
+					async function setToList2(courseList) {
+						let _list = [];
+						for (let c of courseList) {
+							_list.push({ name: c, check: [] });
+						}
+						return _list;
+					}
+
+					async function listObj(_list, checkList) {
+						for (let c of _list) {
+							for (let s of checkList) {
+								if (s.name == c.name) {
+									delete s.name;
+									delete s.key;
+									c.check.push(s);
+									console.log(_list);
+								}
+							}
+						}
+						return _list;
+					}
+					async function main(checkList) {
+						const _list = await setToList(checkList);
+						console.log(_list);
+						const _list2 = await setToList2(_list);
+						console.log(_list2);
+
+						const list2 = await listObj(_list2, checkList);
+						console.log(list2);
+						return list2;
+					}
+					const a = main(response.data.checkList);
+					resolve(a);
 				} else {
 					alert('수업 정보를 가져오는데 실패했습니다.');
 				}
@@ -35,7 +79,7 @@ const CheckContetns = () => {
 			setTimeout(() => {
 				setTableData(Data);
 				setLoading(false);
-			}, 1000);
+			}, 2000);
 
 			console.log(loading);
 			console.log(Data);
@@ -76,7 +120,10 @@ const CheckContetns = () => {
 	} else {
 		return (
 			<Fade>
-				<div className="contents" style={{ width: '100%', overflowX: 'scroll' }}>
+				<div
+					className="contents"
+					style={{ width: '100%', overflowX: 'scroll', overflowY: 'scroll' }}
+				>
 					<Title>마이페이지</Title>
 					<Title level={5}>출석체크 확인</Title>
 					<Divider />

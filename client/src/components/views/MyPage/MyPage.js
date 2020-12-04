@@ -65,7 +65,7 @@ const MyPage = () => {
 						</Menu>
 					</div>
 				</Sider>
-				<Content>
+				<Content style={{ overflowY: 'scroll' }}>
 					{visiblevideo && <VideoContents user={user} />}
 					{visiblecheck && <CheckContetns />}
 					{visiblecourse && <CourseContents />}
