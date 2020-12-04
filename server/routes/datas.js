@@ -268,7 +268,7 @@ router.post('/check/proffesor', (req, res) => {
 		}
 		setTimeout(() => {
 			return res.status(200).json({ success: true, checkList: _list });
-		}, 2000);
+		}, 4000);
 	});
 });
 
