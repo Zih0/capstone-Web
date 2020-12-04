@@ -74,7 +74,13 @@ router.post('/verify/test', (req, res) => {
 		mode: 'text',
 		pythonPath: '/usr/bin/python3',
 		pythonOptions: ['-u'],
-		args: ['/home/ubuntu/capstone-Web' + 'uplodas/verify/0.avi', 1111, 1, 0, '테스트101'],
+		args: [
+			'/home/ubuntu/capstone-Web' + 'uplodas/verify/0.avi',
+			req.body.key,
+			15,
+			req.body.gesture,
+			'테스트101',
+		],
 	}; //res.req.file.path
 	PythonShell.run('/home/ubuntu/faceRecog/chulCheck.py', options, (err, result) => {
 		if (err) return res.json({ success: false, err });
