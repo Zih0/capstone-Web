@@ -94,7 +94,13 @@ router.post('/verify', (req, res) => {
 			mode: 'text',
 			pythonPath: '/usr/bin/python3',
 			pythonOptions: ['-u'],
-			args: [res.req.file.path, req.body.key, req.body.week, req.body.finger, req.body.name],
+			args: [
+				'/home/ubuntu/capstone-Web/' + res.req.file.path,
+				req.body.key,
+				req.body.week,
+				req.body.finger,
+				req.body.name,
+			],
 		};
 		if (err) return res.json({ success: false, err });
 		PythonShell.run('/home/ubuntu/faceRecog/chulCheck.py', options, (err, result) => {
