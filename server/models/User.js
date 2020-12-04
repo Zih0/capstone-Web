@@ -31,7 +31,7 @@ const userSchema = mongoose.Schema({
 	},
 	update: {
 		type: String,
-		default: '1',
+		default: '11',
 	},
 	video: {
 		type: String,
