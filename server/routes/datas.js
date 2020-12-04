@@ -110,17 +110,6 @@ router.post('/verify', (req, res) => {
 	});
 });
 
-router.post('/image/studentcard', (req, res) => {
-	let card_list = [];
-	for (student of req.body.students) {
-		User.find({ studentId: student }, { studentcard: 1 }).exec((err, info) => {
-			if (err) return res.json({ success: false, err });
-			card_list.push({ name: info.name, card: info.studentcard });
-		});
-	}
-	return res.json({ success: true, card: card_list });
-});
-
 router.post('/professor/image', (req, res) => {
 	uploadProf(req, res, (err) => {
 		if (err) return res.json({ success: false, err });
@@ -130,6 +119,7 @@ router.post('/professor/image', (req, res) => {
 
 const appkey = 'ec358a4773c993c7dba039d6d3555c2b';
 
+var fs = require('fs');
 router.post('/studentcard', (req, res) => {
 	let studentid = '';
 	uploadImage(req, res, (err) => {
@@ -139,6 +129,7 @@ router.post('/studentcard', (req, res) => {
 			pythonOptions: ['-u'],
 			args: [res.req.file.path, appkey],
 		};
+
 		PythonShell.run(
 			'/home/ubuntu/capstone-Web/server/python/kakao-ocr.py',
 			options,
@@ -146,10 +137,17 @@ router.post('/studentcard', (req, res) => {
 				if (err) console.log(err);
 				studentid = result[0];
 				console.log(studentid);
+
 				if (studentid.length == '') return res.json({ success: false });
-				return res
-					.status(200)
-					.send({ success: true, filePath: res.req.file.path, studentid: studentid });
+
+				fs.rename(res.req.file.path, 'uploads/card/' + studentid + '.png', function (err) {
+					console.log(res.req.file.filename + ' ' + res.req.file.path);
+				});
+				return res.status(200).send({
+					success: true,
+					filePath: 'uploads/card/' + studentid + '.png',
+					studentid: studentid,
+				});
 			}
 		);
 	});
