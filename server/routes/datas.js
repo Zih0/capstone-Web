@@ -75,7 +75,7 @@ router.post('/verify', (req, res) => {
 			mode: 'text',
 			pythonPath: '/usr/bin/python3',
 			pythonOptions: ['-u'],
-			args: [res.req.file.path, key, , week, finger],
+			args: [res.req.file.path, key, week, finger, name],
 		};
 		PythonShell.run('/home/ubuntu/faceRecog/chulCheck.py', options, (err, result) => {
 			if (err) return res.json({ success: false });
