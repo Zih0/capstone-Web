@@ -69,6 +69,19 @@ router.post('/uploadfile', (req, res) => {
 	});
 });
 
+router.post('/verify/test', (req, res) => {
+	let options = {
+		mode: 'text',
+		pythonPath: '/usr/bin/python3',
+		pythonOptions: ['-u'],
+		args: ['/home/ubuntu/capstone-Web' + 'uplodas/verify/0.avi', 1111, 1, 0, '테스트101'],
+	}; //res.req.file.path
+	PythonShell.run('/home/ubuntu/faceRecog/chulCheck.py', options, (err, result) => {
+		if (err) return res.json({ success: false });
+		return res.status(200).send({ success: true, result: result });
+	});
+});
+
 router.post('/verify', (req, res) => {
 	uploadAtt(req, res, (err) => {
 		let options = {
