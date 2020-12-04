@@ -10,147 +10,119 @@ const { TabPane } = Tabs;
 
 const CheckContetns = () => {
 	const user = useSelector((state) => state.user);
-	const [Courses, setCourses] = useState([]);
+	const [TableData, setTableData] = useState([]);
+	const [loading, setLoading] = useState(true);
 	const getCheck = () => {
-		let body = {
-			name: user.userData.name,
-			major: user.userData.major,
-		};
-		axios.post('/api/datas/professor/checks', body).then((response) => {
-			if (response.data.success) {
-				console.log(response.data);
-			} else {
-				alert('정보를 가져오는데 실패했습니다.');
-			}
+		return new Promise((resolve, reject) => {
+			let body = {
+				name: user.userData.name,
+				major: user.userData.major,
+			};
+			axios.post('/api/datas/check/professor', body).then((response) => {
+				if (response.data.success) {
+					const Courses = response.data.checkList;
+					async function findcourses(Courses) {
+						let Check = [];
+						let DataSet = [];
+						let name = '';
+						let key = '';
+						Courses.forEach((course) => {
+							course.forEach((element) => {
+								Check.push({
+									id: element.studentid,
+									face: element.face,
+									gesture: element.gesture,
+									week: element.week,
+								});
+								name = element.name;
+								key = element.key;
+							});
+							if (course !== []) {
+								DataSet.push({ key: key, name: name, check: Check });
+								Check = [];
+								name = '';
+							}
+						});
+						return DataSet;
+					}
+					async function main(Courses) {
+						const a = await findcourses(Courses);
+						return a;
+					}
+					const result = main(Courses);
+					resolve(result);
+				} else {
+					alert('정보를 가져오는데 실패했습니다.');
+				}
+			});
 		});
 	};
 	useEffect(() => {
-		const check = (user) => {
-			getCheck();
+		const fetchCheck = async () => {
+			const Data = await getCheck();
+
+			setTimeout(() => {
+				setTableData(Data);
+				setLoading(false);
+			}, 3000);
 		};
-		check();
+
+		fetchCheck();
 	}, []);
 
 	const columns = [
 		{
-			title: '1주차',
-			key: '1w',
-			dataIndex: '1w',
+			title: '주차',
+			key: 'week',
+			dataIndex: 'week',
+			defaultSortOrder: 'descend',
+			sorter: (a, b) => a.week - b.week,
 		},
 		{
-			title: '2주차',
-			key: '2w',
-			dataIndex: '2w',
+			title: '학번',
+			key: 'id',
+			dataIndex: 'id',
 		},
 		{
-			title: '3주차',
-			key: '3w',
-			dataIndex: '3w',
+			title: '얼굴인증',
+			key: 'face',
+			dataIndex: 'face',
 		},
 		{
-			title: '4주차',
-			key: '4w',
-			dataIndex: '4w',
-		},
-		{
-			title: '5주차',
-			key: '5w',
-			dataIndex: '5w',
-		},
-		{
-			title: '6주차',
-			key: '6w',
-			dataIndex: '6w',
-		},
-		{
-			title: '7주차',
-			key: '7w',
-			dataIndex: '7w',
-		},
-		{
-			title: '8주차',
-			key: '8w',
-			dataIndex: '8w',
-		},
-		{
-			title: '9주차',
-			key: '9w',
-			dataIndex: '9w',
-		},
-		{
-			title: '10주차',
-			key: '10w',
-			dataIndex: '10w',
-		},
-		{
-			title: '11주차',
-			key: '11w',
-			dataIndex: '11w',
-		},
-		{
-			title: '12주차',
-			key: '12w',
-			dataIndex: '12w',
-		},
-		{
-			title: '13주차',
-			key: '13w',
-			dataIndex: '13w',
-		},
-		{
-			title: '14주차',
-			key: '14w',
-			dataIndex: '14w',
-		},
-		{
-			title: '15주차',
-			key: '15w',
-			dataIndex: '15w',
-			fixed: 'right',
+			title: '제스쳐인증',
+			key: 'gesture',
+			dataIndex: 'gesture',
 		},
 	];
+	if (loading) {
+		return (
+			<Fade>
+				<div className="contents" style={{ width: '100%', overflowX: 'scroll' }}>
+					<Title>마이페이지</Title>
+					<Title level={5}>출석체크 확인</Title>
+					<Divider />
+					<Table columns={columns} loading={loading}></Table>
+				</div>
+			</Fade>
+		);
+	} else {
+		return (
+			<Fade>
+				<div className="contents" style={{ width: '100%', overflowX: 'scroll' }}>
+					<Title>출석부</Title>
+					<Divider />
 
-	return (
-		<Fade>
-			<div className="contents" style={{ width: '100%', overflowX: 'scroll' }}>
-				<Title>출석부</Title>
-				<Divider />
-
-				<Tabs defaultActiveKey="1" style={{ overflowX: 'scroll' }}>
-					{Courses.map((pane) => (
-						<TabPane tab={pane.coursename} key={pane.key}>
-							<Table
-								bordered
-								columns={columns}
-								scroll={{ x: 'max-content' }}
-								size="small"
-								dataSource={[
-									{
-										key: '1',
-										'1w': pane.check['1'],
-										'2w': pane.check['2'],
-										'3w': pane.check['3'],
-										'4w': pane.check['4'],
-										'5w': pane.check['5'],
-										'6w': pane.check['6'],
-										'7w': pane.check['7'],
-										'8w': pane.check['8'],
-										'9w': pane.check['9'],
-										'10w': pane.check['10'],
-										'11w': pane.check['11'],
-										'12w': pane.check['12'],
-										'13w': pane.check['13'],
-										'14w': pane.check['14'],
-										'15w': pane.check['15'],
-									},
-								]}
-							></Table>
-						</TabPane>
-					))}
-				</Tabs>
-			</div>
-		</Fade>
-	);
+					<Tabs defaultActiveKey="1">
+						{TableData.map((pane) => (
+							<TabPane tab={pane.name} key={pane.key}>
+								<Table bordered columns={columns} size="small" dataSource={pane.check}></Table>
+							</TabPane>
+						))}
+					</Tabs>
+				</div>
+			</Fade>
+		);
+	}
 };
 
 export default CheckContetns;
