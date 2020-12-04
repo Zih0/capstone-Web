@@ -75,7 +75,7 @@ router.post('/verify/test', (req, res) => {
 		pythonPath: '/usr/bin/python3',
 		pythonOptions: ['-u'],
 		args: [
-			'/home/ubuntu/capstone-Web' + 'uplodas/verify/0.avi',
+			'/home/ubuntu/capstone-Web' + '/uplodas/verify/0.avi',
 			req.body.key,
 			req.body.week,
 			req.body.gesture,
