@@ -98,7 +98,7 @@ router.post('/verify', (req, res) => {
 		};
 		if (err) return res.json({ success: false, err });
 		PythonShell.run('/home/ubuntu/faceRecog/chulCheck.py', options, (err, result) => {
-			if (err) return res.json({ success: false });
+			if (err) return res.json({ success: false, err });
 			return res.status(200).send({ success: true, result: result });
 		});
 	});
