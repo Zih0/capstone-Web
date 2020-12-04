@@ -110,6 +110,17 @@ router.post('/verify', (req, res) => {
 	});
 });
 
+router.post('/image/studentcard', (req, res) => {
+	let card_list = [];
+	for (student of req.body.students) {
+		User.find({ studentId: student }, { studentcard: 1 }).exec((err, info) => {
+			if (err) return res.json({ success: false, err });
+			card_list.push({ name: info.name, card: info.studentcard });
+		});
+	}
+	return res.json({ success: true, card: card_list });
+});
+
 router.post('/professor/image', (req, res) => {
 	uploadProf(req, res, (err) => {
 		if (err) return res.json({ success: false, err });
