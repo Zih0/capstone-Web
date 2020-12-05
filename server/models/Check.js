@@ -7,7 +7,7 @@ const checkSchema = mongoose.Schema({
 	week: {
 		type: Number,
 	},
-	studentId: {
+	studentid: {
 		type: Number,
 	},
 	face: {
