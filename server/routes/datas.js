@@ -70,7 +70,7 @@ router.post('/uploadfile', (req, res) => {
 });
 
 router.post('/manual', (req, res) => {
-	console.log(req.body);
+	console.log(req);
 	Check.insertMany(req.body.students).then(() => console.log('success'));
 });
 
