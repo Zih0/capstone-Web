@@ -69,22 +69,10 @@ router.post('/uploadfile', (req, res) => {
 	});
 });
 
-router.post('/verify/test', (req, res) => {
-	let options = {
-		mode: 'text',
-		pythonPath: '/usr/bin/python3',
-		pythonOptions: ['-u'],
-		args: [
-			'/home/ubuntu/capstone-Web' + '/uploads/verify/0.avi',
-			req.body.key,
-			req.body.week,
-			req.body.gesture,
-			'테스트101',
-		],
-	}; //res.req.file.path
-	PythonShell.run('/home/ubuntu/faceRecog/chulCheck.py', options, (err, result) => {
-		if (err) return res.json({ success: false, err });
-		return res.status(200).send({ success: true, result: result });
+router.post('/manual', (req, res) => {
+	Check.insertMany(req.body.students).exec((err, info) => {
+		if (err) return res.json({ success: false });
+		console.log(info);
 	});
 });
 
