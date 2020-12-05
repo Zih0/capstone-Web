@@ -37,7 +37,7 @@ const RegisterCourse = () => {
       }
       axios.post('/api/datas/update/idincourse', body).then((response) => {
         if (response.data.success) {
-          console.log(response.data)
+          console.log(response.data.success)
         } else {
           alert('ERROR!!');
         }
@@ -169,7 +169,7 @@ const RegisterCourse = () => {
           />
           <div style={{display: 'flex', justifyContent: 'flex-end', marginRight: '1rem'}}>
           <Button type="primary" onClick={submitHandler} disabled={!buttondisabled} loading={loading}>
-            <Link to='/'>등록하기</Link></Button>
+            <Link to='/mypage'>등록하기</Link></Button>
           </div>
           </div>
         </div>
