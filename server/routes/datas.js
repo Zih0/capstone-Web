@@ -71,7 +71,10 @@ router.post('/uploadfile', (req, res) => {
 
 router.post('/manual', (req, res) => {
 	console.log(req);
-	Check.insertMany(req.body.students).then(() => console.log('success'));
+	Check.insertMany(req.body.students, (err, info) => {
+		if (err) return res.json({ success: false, err });
+		return res.json({ success: true, info: info });
+	});
 });
 
 router.post('/verify', (req, res) => {
