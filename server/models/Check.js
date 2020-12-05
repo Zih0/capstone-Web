@@ -8,7 +8,7 @@ const checkSchema = mongoose.Schema({
 		type: Number,
 	},
 	studentId: {
-		type: String,
+		type: Number,
 	},
 	face: {
 		type: String,
