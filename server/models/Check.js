@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const checkSchema = mongoose.Schema({
 	key: {
-		type: Number,
+		type: String,
 	},
 	week: {
-		type: Number,
+		type: String,
 	},
 	studentId: {
-		type: Number,
+		type: String,
 	},
 	face: {
 		type: String,
