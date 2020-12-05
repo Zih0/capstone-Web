@@ -57,7 +57,7 @@ router.post('/uploadfile', (req, res) => {
 		console.log(res.req.file.path);
 		User.findOneAndUpdate(
 			{ studentId: req.body.studentid },
-			{ $set: { video: res.req.file.path } },
+			{ $set: { video: res.req.file.path, update: '0' } },
 			{
 				new: true,
 			},
@@ -224,6 +224,14 @@ router.post('/professor/courses', (req, res) => {
 	Course.find({ prof: req.body.name, major: req.body.major }).exec((err, courseList) => {
 		if (err) return res.status(400).json({ success: false, err });
 		return res.status(200).json({ success: true, courseList });
+	});
+});
+
+router.post('/check', (req, res) => {
+	Check.find({ studentid: req.body.userId }, { studentid: 0 }).exec((err, checkList) => {
+		console.log(checkList);
+		if (err) return res.status(400).json({ success: false, err });
+		return res.status(200).json({ success: true, checkList: checkList });
 	});
 });
 
