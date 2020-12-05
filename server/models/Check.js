@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const checkSchema = mongoose.Schema({
 	key: {
-		type: String,
+		type: Number,
 	},
 	week: {
-		type: String,
+		type: Number,
 	},
 	studentId: {
 		type: String,
