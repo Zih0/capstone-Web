@@ -169,7 +169,7 @@ router.post('/update/idincourse', (req, res) => {
 		).exec(() => {
 			for (let key of keys) {
 				if (!(key in req.body.courses)) {
-					Course.updateOne(
+					Course.findOneAndUpdate(
 						{ key: key },
 						{ $set: { update: '1' } },
 						{
