@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Divider, Tabs, Table } from 'antd';
+import { Layout, Menu, Typography, Divider, Tabs, Table } from 'antd';
 import { useSelector } from 'react-redux';
 import Fade from 'react-reveal/Fade';
 import axios from 'axios';
+import { USER_SERVER } from '../../Config';
 
 const { Title } = Typography;
 
 const { TabPane } = Tabs;
+const { Header, Content } = Layout;
 
 const CheckContetns = () => {
 	const user = useSelector((state) => state.user);
@@ -60,11 +62,11 @@ const CheckContetns = () => {
 	useEffect(() => {
 		const fetchCheck = async () => {
 			const Data = await getCheck();
-
+			console.log(Data);
 			setTimeout(() => {
 				setTableData(Data);
 				setLoading(false);
-			}, 3000);
+			}, 5000);
 		};
 
 		fetchCheck();
@@ -94,35 +96,68 @@ const CheckContetns = () => {
 			dataIndex: 'gesture',
 		},
 	];
-	if (loading) {
-		return (
-			<Fade>
-				<div className="contents" style={{ width: '100%', overflowX: 'scroll' }}>
-					<Title>마이페이지</Title>
-					<Title level={5}>출석체크 확인</Title>
-					<Divider />
-					<Table columns={columns} loading={loading}></Table>
-				</div>
-			</Fade>
-		);
-	} else {
-		return (
-			<Fade>
-				<div className="contents" style={{ width: '100%', overflowX: 'scroll' }}>
-					<Title>출석부</Title>
-					<Divider />
 
-					<Tabs defaultActiveKey="1">
-						{TableData.map((pane) => (
-							<TabPane tab={pane.name} key={pane.key}>
-								<Table bordered columns={columns} size="small" dataSource={pane.check}></Table>
-							</TabPane>
-						))}
-					</Tabs>
-				</div>
-			</Fade>
-		);
-	}
+	const logoutProfHandler = (props) => {
+		axios.get(`${USER_SERVER}/logout`).then((response) => {
+			if (response.status === 200) {
+				console.log('로그아웃');
+			} else {
+				alert('로그아웃 실패');
+			}
+		});
+	};
+
+	return (
+		<div>
+			<Layout className="layout">
+				<Header>
+					<Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+						<Menu.Item key="1">
+							<a href="/professor">홈</a>
+						</Menu.Item>
+						<Menu.Item key="2">출석부</Menu.Item>
+						<Menu.Item key="3">
+							<a onClick={logoutProfHandler} href="/professor">
+								로그아웃
+							</a>
+						</Menu.Item>
+					</Menu>
+				</Header>
+				<Content style={{ overflowY: 'auto' }}>
+					{loading && (
+						<Fade>
+							<div className="contents">
+								<Title>출석부</Title>
+								<Divider />
+								<Table columns={columns} loading={loading}></Table>
+							</div>
+						</Fade>
+					)}
+					{!loading && (
+						<Fade>
+							<div className="contents">
+								<Title>출석부</Title>
+								<Divider />
+
+								<Tabs defaultActiveKey="1">
+									{TableData.map((pane) => (
+										<TabPane tab={pane.name} key={pane.key}>
+											<Table
+												bordered
+												columns={columns}
+												size="small"
+												dataSource={pane.check}
+											></Table>
+										</TabPane>
+									))}
+								</Tabs>
+							</div>
+						</Fade>
+					)}
+				</Content>
+			</Layout>
+		</div>
+	);
 };
 
 export default CheckContetns;

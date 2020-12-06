@@ -66,6 +66,16 @@ router.post('/uploadfile', (req, res) => {
 				return res.status(200).send({ success: true, userInfo });
 			}
 		);
+		User.find({ studentId: req.body.studentid }, { course: 1 }).exec((err, data) => {
+			data.course.forEach((key) => {
+				Course.findOneAndUpdate(
+					{
+						key: key,
+					},
+					{ $set: { update: '1' } }
+				);
+			});
+		});
 	});
 });
 
@@ -157,7 +167,7 @@ router.post('/update/idincourse', (req, res) => {
 			{ multi: true }
 		).exec(() => {
 			for (let key of keys) {
-				if (!(key in req.body.courses)) {
+				if (!req.body.courses.includes(key)) {
 					Course.findOneAndUpdate(
 						{ key: key },
 						{ $set: { update: '1' } },
@@ -180,7 +190,7 @@ router.post('/update/idincourse', (req, res) => {
 				} else {
 					Course.updateOne(
 						{ _id: course._id },
-						{ $set: { update: 1 }, $addToSet: { students: req.body.userId } }
+						{ $set: { update: '1' }, $addToSet: { students: req.body.userId } }
 					).exec();
 				}
 				console.log(course.key);

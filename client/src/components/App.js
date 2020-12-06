@@ -24,13 +24,14 @@ import ProfLoginPage from './views/LoginPage/ProfLoginPage';
 function App() {
 	return (
 		<Suspense fallback={<div>Loading...</div>}>
-			<Route exact path="/professor" component={Auth(ProfessorLandingPage, null)} />
+			<Route exact path="/professor/mypage" component={Auth(ProfessorPage, true)} />
 			<NavBar />
 			<div style={{ paddingTop: '58px', minHeight: 'calc(100vh - 80px)' }}>
 				<Switch>
+					<Route exact path="/professor" component={Auth(ProfessorLandingPage, null)} />
 					<Route exact path="/login/professor" component={Auth(ProfLoginPage, false)} />
 					<Route exact path="/register/professor" component={Auth(RegisterProfessor, null)} />
-					<Route exact path="/professor/mypage" component={Auth(ProfessorPage, true)} />
+
 					<Route exact path="/" component={Auth(LandingPage, null)} />
 					<Route exact path="/login" component={Auth(LoginPage, false)} />
 					<Route exact path="/register" component={Auth(RegisterPage, false)} />

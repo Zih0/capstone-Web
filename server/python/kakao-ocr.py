@@ -1,5 +1,5 @@
 import json
-
+import dlib
 import cv2
 import requests
 import sys
@@ -31,10 +31,9 @@ def kakao_ocr_resize(image_path: str):
         # api 사용전에 이미지가 resize된 경우, recognize시 resize된 결과를 사용해야함.
         image_path = "{}".format(image_path)
         cv2.imwrite(image_path, image)
-
+        crop(image_path)
         return image_path
     return None
-
 
 def kakao_ocr(image_path: str, appkey: str):
     """
@@ -51,6 +50,28 @@ def kakao_ocr(image_path: str, appkey: str):
     data = jpeg_image.tobytes()
 
     return requests.post(API_URL, headers=headers, files={"image": data})
+
+def crop(image_path):
+    '''Test the given model by showing the detected landmarks.
+        - image_path: the path of an image. Should contain a face.
+        - model_path: the path of a shape predictor model.
+    '''
+    image = cv2.imread(image_path)
+    face_detector = dlib.get_frontal_face_detector()
+    dets = face_detector(image, 1)
+    height, width, _ = image.shape
+    top, bottom, left, right = dets[0].top()-10, dets[0].bottom()+10, \
+                            dets[0].left()-20, dets[0].right()+20
+    if top<=0:
+        top = 0
+    if bottom >= height:
+        bottom = height
+    if left <= 0:
+        left = 0
+    if right >= width:
+        right = width
+    image = image[top: bottom, left:right]
+    cv2.imwrite(f"{image_path.split('.')[0]}-crop.png", image)
 
 
 def main():

@@ -62,7 +62,6 @@ function ProfessorLandingPage() {
 							</Button>
 						</Col>
 					</Row>
-					;
 				</div>
 			</>
 		);
