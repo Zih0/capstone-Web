@@ -86,7 +86,7 @@ router.post('/uploadfile', (req, res) => {
 		});
 
 		PythonShell.run('/home/ubuntu/faceRecog/videoEmbedding.py', options, (err, result) => {
-			if (err) return res.json({ success: false, err });
+			if (err) console.log(err);
 			console.log(result);
 		});
 	});
