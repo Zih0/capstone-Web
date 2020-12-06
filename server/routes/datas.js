@@ -72,10 +72,6 @@ router.post('/uploadfile', (req, res) => {
 			pythonOptions: ['-u'],
 			args: [req.body.studentid, '/home/ubuntu/capstone-Web/' + res.req.file.path],
 		};
-		PythonShell.run('/home/ubuntu/faceRecog/videoEmbedding.py', options, (err) => {
-			if (err) return res.json({ success: false, err });
-		});
-
 		User.find({ studentId: req.body.studentid }, { course: 1 }).exec((err, data) => {
 			console.log(data);
 			for (key of data[0].course) {
@@ -86,6 +82,9 @@ router.post('/uploadfile', (req, res) => {
 					{ $set: { update: '1' } }
 				);
 			}
+		});
+		PythonShell.run('/home/ubuntu/faceRecog/videoEmbedding.py', options, (err) => {
+			if (err) return res.json({ success: false, err });
 		});
 	});
 });
