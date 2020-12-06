@@ -142,6 +142,13 @@ router.post('/studentcard', (req, res) => {
 				fs.rename(res.req.file.path, 'uploads/card/' + studentid + '.png', function (err) {
 					console.log(res.req.file.filename + ' ' + res.req.file.path);
 				});
+				fs.rename(
+					res.req.file.path + '-crop',
+					'uploads/card/' + studentid + '-crop.png',
+					function (err) {
+						console.log(res.req.file.filename + ' ' + res.req.file.path);
+					}
+				);
 				return res.status(200).send({
 					success: true,
 					filePath: 'uploads/card/' + studentid + '.png',
