@@ -67,7 +67,7 @@ router.post('/uploadfile', (req, res) => {
 			}
 		);
 		User.find({ studentId: req.body.studentid }, { course: 1 }).exec((err, data) => {
-			data.course.forEach((key) => {
+			data.course.foreach((key) => {
 				Course.findOneAndUpdate(
 					{
 						key: key,
@@ -251,7 +251,7 @@ router.post('/check/professor', (req, res) => {
 	Course.find({ prof: req.body.name, major: req.body.major }, { _id: 0, key: 1, course: 1 }).exec(
 		(err, courseList) => {
 			if (err) return res.status(400).json({ success: false, err });
-			courseList.forEach((course) => {
+			courseList.foreach((course) => {
 				Check.find({ key: course.key }, { _id: 0 }).exec((err, result) => {
 					checkList.push(result);
 				});
