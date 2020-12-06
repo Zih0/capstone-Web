@@ -192,7 +192,7 @@ router.post('/update/idincourse', (req, res) => {
 				if (course in keys) {
 					Course.findOneAndUpdate(
 						{ _id: course._id },
-						{ $addToSet: { students: req.body.userId } }
+						{ $set: { update: '1' }, $addToSet: { students: req.body.userId } }
 					).exec();
 				} else {
 					Course.findOneAndUpdate(
