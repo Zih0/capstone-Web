@@ -251,11 +251,11 @@ router.post('/check/professor', (req, res) => {
 	Course.find({ prof: req.body.name, major: req.body.major }, { _id: 0, key: 1, course: 1 }).exec(
 		(err, courseList) => {
 			if (err) return res.status(400).json({ success: false, err });
-			courseList.foreach((course) => {
+			for (course of courseList) {
 				Check.find({ key: course.key }, { _id: 0 }).exec((err, result) => {
 					checkList.push(result);
 				});
-			});
+			}
 			setTimeout(() => {
 				return res.json({ success: true, checkList });
 			}, 2000);
