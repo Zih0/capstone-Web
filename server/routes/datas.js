@@ -68,7 +68,7 @@ router.post('/uploadfile', (req, res) => {
 		);
 		User.find({ studentId: req.body.studentid }, { course: 1 }).exec((err, data) => {
 			console.log(data);
-			for (key of data.course) {
+			for (key of data[0].course) {
 				Course.findOneAndUpdate(
 					{
 						key: key,
