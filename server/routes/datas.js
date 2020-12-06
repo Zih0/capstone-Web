@@ -143,7 +143,7 @@ router.post('/studentcard', (req, res) => {
 					console.log(res.req.file.filename + ' ' + res.req.file.path);
 				});
 				fs.rename(
-					res.req.file.path + '-crop',
+					res.req.file.path + '-crop.png',
 					'uploads/card/' + studentid + '-crop.png',
 					function (err) {
 						console.log(res.req.file.filename + ' ' + res.req.file.path);
