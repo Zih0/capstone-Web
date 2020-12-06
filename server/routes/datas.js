@@ -195,12 +195,11 @@ router.post('/update/idincourse', (req, res) => {
 						{ $addToSet: { students: req.body.userId } }
 					).exec();
 				} else {
-					Course.updateOne(
+					Course.findOneAndUpdate(
 						{ _id: course._id },
 						{ $set: { update: '1' }, $addToSet: { students: req.body.userId } }
 					).exec();
 				}
-				console.log(course.key);
 				User.findOneAndUpdate(
 					{ studentId: req.body.userId },
 					{
@@ -211,9 +210,7 @@ router.post('/update/idincourse', (req, res) => {
 					{
 						new: true,
 					},
-					(err, info) => {
-						console.log(info);
-					}
+					(err, info) => {}
 				);
 			}
 		});
