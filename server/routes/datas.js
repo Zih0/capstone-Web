@@ -67,14 +67,14 @@ router.post('/uploadfile', (req, res) => {
 			}
 		);
 		User.find({ studentId: req.body.studentid }, { course: 1 }).exec((err, data) => {
-			data.course.foreach((key) => {
+			for (key of data.course) {
 				Course.findOneAndUpdate(
 					{
 						key: key,
 					},
 					{ $set: { update: '1' } }
 				);
-			});
+			}
 		});
 	});
 });
