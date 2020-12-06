@@ -60,8 +60,8 @@ def crop(image_path):
     face_detector = dlib.get_frontal_face_detector()
     dets = face_detector(image, 1)
     height, width, _ = image.shape
-    top, bottom, left, right = dets[0].top()-10, dets[0].bottom()+10, \
-                            dets[0].left()-20, dets[0].right()+20
+    top, bottom, left, right = dets[0].top()-30, dets[0].bottom()+30, \
+                            dets[0].left()-40, dets[0].right()+40
     if top<=0:
         top = 0
     if bottom >= height:
