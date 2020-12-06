@@ -166,8 +166,7 @@ router.post('/update/idincourse', (req, res) => {
 			keys.push(i.key);
 		}
 	});
-
-	User.updateMany({ studentId: req.body.userId }, { $set: { course: [] } }).exec(
+	User.updateMany({ studentId: req.body.userId }, { $set: { course: [] } }).exec(() => {
 		Course.updateMany(
 			{},
 			{ $pull: { students: { $in: [req.body.userId] } } },
@@ -216,8 +215,8 @@ router.post('/update/idincourse', (req, res) => {
 					}
 				);
 			}
-		})
-	);
+		});
+	});
 
 	//     if(err) return res.json({ success: false, err });
 	// return res.status(200).send({success:true});
